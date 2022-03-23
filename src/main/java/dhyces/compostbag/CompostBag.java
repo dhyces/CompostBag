@@ -16,10 +16,13 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,33 +39,27 @@ public class CompostBag {
 	public static final Logger LOGGER = LogManager.getLogger(CompostBag.class);
 
     public CompostBag() {
-    	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-    	FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+    	var modBus = FMLJavaModLoadingContext.get().getModEventBus();
+    	
+    	modBus.addListener(this::commonSetup);
+    	modBus.addListener(this::clientSetup);
+    	
+    	ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.commonSpec);
+    	
+    	Registry.register(modBus);
     }
     
     private void commonSetup(final FMLCommonSetupEvent event) {
     	event.enqueueWork(() -> {
-    		DispenserBlock.registerBehavior(RegistryEvents.COMPOST_BAG, RegistryEvents.COMPOST_BAG.DISPENSE_BEHAVIOR);
+    		DispenserBlock.registerBehavior(Registry.COMPOST_BAG.get(), Registry.COMPOST_BAG.get().DISPENSE_BEHAVIOR);
     	});
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {
     	event.enqueueWork(() -> 
-    		ItemProperties.register(RegistryEvents.COMPOST_BAG, new ResourceLocation(MODID, "filled"), (stack, level, living, id) -> {
+    		ItemProperties.register(Registry.COMPOST_BAG.get(), new ResourceLocation(MODID, "filled"), (stack, level, living, id) -> {
 	         return CompostBagItem.getFullnessDisplay(stack);
 	      }));
     	MinecraftForgeClient.registerTooltipComponentFactory(CompostBagTooltip.class, ClientCompostBagTooltip::new);
-    }
-    
-    @Mod.EventBusSubscriber(modid = MODID, bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-    	
-    	public static CompostBagItem COMPOST_BAG;
-    	
-        @SubscribeEvent
-        static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-        	COMPOST_BAG = new CompostBagItem();
-            event.getRegistry().register(COMPOST_BAG);
-        }
     }
 }
