@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import com.google.common.collect.Lists;
 
 import dhyces.compostbag.CompostBag;
+import dhyces.compostbag.Config;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -39,7 +40,7 @@ public class CompostBagItem extends Item {
 	
 	public static final String TAG_LEVEL = "Level";
 	public static final String TAG_COUNT = "Count";
-	public static final int MAX_BONEMEAL_COUNT = 128;
+	public static final Supplier<Integer> MAX_BONEMEAL_COUNT = () -> {return Config.COMMON.MAX_BONEMEAL.get();};
 	public final DispenseItemBehavior DISPENSE_BEHAVIOR = new OptionalDispenseItemBehavior() {
         protected ItemStack execute(BlockSource blockSource, ItemStack stack) {
             this.setSuccess(true);
@@ -59,7 +60,6 @@ public class CompostBagItem extends Item {
 
 	public CompostBagItem() {
 		super(new Item.Properties().stacksTo(1).tab(CreativeModeTab.TAB_TOOLS));
-		setRegistryName(CompostBag.MODID, "compost_bag");
 	}
 	
 	@Override
@@ -76,7 +76,7 @@ public class CompostBagItem extends Item {
 	}
 	
 	public static float getFullnessDisplay(ItemStack bag) {
-		return getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT;
+		return getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT.get();
 	}
 	
 	public boolean isBarVisible(ItemStack bag) {
@@ -84,7 +84,7 @@ public class CompostBagItem extends Item {
 	}
 
 	public int getBarWidth(ItemStack bag) {
-		return 1 + (int) ((float)getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT * MAX_BAR_WIDTH - 1);
+		return 1 + (int) ((float)getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT.get() * MAX_BAR_WIDTH - 1);
 	}
 	
 	@Override
@@ -99,7 +99,9 @@ public class CompostBagItem extends Item {
 			if (slot.hasItem()) {
 				float compostable = getCompostable(slot.getItem());
 				if (compostable > 0) {
-					
+					for (int count = 0; count < slot.getItem().getCount(); count++) {
+						
+					}
 					return true;
 				}
 			}
@@ -116,9 +118,10 @@ public class CompostBagItem extends Item {
 				var lvl = getLevel(bag);
 				var count = getBonemealCount(bag);
 				if (compostable > 0F && lvl < ComposterBlock.READY) {
-					if (count == MAX_BONEMEAL_COUNT && lvl == ComposterBlock.MAX_LEVEL)
+					if (count == MAX_BONEMEAL_COUNT.get() && lvl == ComposterBlock.MAX_LEVEL)
 						return false;
-					if ((lvl != 0 || !(compostable < 0.0F)) && !(player.getLevel().getRandom().nextDouble() < (double)compostable)) {
+					if ((lvl != 0 || !(compostable < 0.0F)) && !(player.getRandom().nextDouble() < (double)compostable)) {
+						// 
 						playFillSound(player);
 						otherItem.shrink(1);
 						return true;
@@ -126,15 +129,16 @@ public class CompostBagItem extends Item {
 					if (lvl < ComposterBlock.MAX_LEVEL) {
 						growLevel(bag, 1);
 						playFillSuccessSound(player);
-					} else if (count < MAX_BONEMEAL_COUNT) {
+					} else if (count < MAX_BONEMEAL_COUNT.get()) {
 						setLevel(bag, ComposterBlock.MIN_LEVEL);
 						growBonemealCount(bag, 1);
 						playReadySound(player);
 					}
 					otherItem.shrink(1);
 					return true;
-				} else if (otherItem.is(Items.BONE_MEAL) && count < MAX_BONEMEAL_COUNT) {
-					int growCount = Math.min(otherItem.getCount(), MAX_BONEMEAL_COUNT - count);
+				}
+				if (otherItem.is(Items.BONE_MEAL) && count < MAX_BONEMEAL_COUNT.get()) {
+					int growCount = Math.min(otherItem.getCount(), MAX_BONEMEAL_COUNT.get() - count);
 					growBonemealCount(bag, growCount);
 					otherItem.shrink(growCount);
 					playInsertSound(player);
@@ -151,8 +155,15 @@ public class CompostBagItem extends Item {
 		return super.overrideOtherStackedOnMe(bag, otherItem, slot, clickAction, player, slotAccess);
 	}
 	
-	private int compost(ItemStack bag, ItemStack compostable) {
-		return 0;
+	private void handleCompost(ItemStack bag, ItemStack compostable) {
+		
+	}
+	
+	private boolean compost(ItemStack item) {
+		var compostable = getCompostable(item);
+		if (compostable == 0)
+			return false;
+		return false;
 	}
 	
 	private float getCompostable(ItemStack stack) {
