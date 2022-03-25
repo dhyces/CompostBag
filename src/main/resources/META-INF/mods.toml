@@ -1,14 +1,15 @@
-modLoader="javafml" #mandatory
-loaderVersion="[40,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license="All rights reserved"
-[[mods]] #mandatory
-modId="compostbag" #mandatory
-version="${file.jarVersion}" #mandatory
-displayName="Compost Bag" #mandatory
-#displayURL=" "
-logoFile=" " #optional
-credits=" " #optional
-authors="dhyces" #optional
+modLoader="javafml"
+loaderVersion="[40,)"
+license="MIT License"
+[[mods]]
+modId="compostbag
+version="${file.jarVersion}"
+displayName="Compost Bag"
+issueTrackerURL="https://github.com/dhyces/CompostBag"
+updateJSONURL="https://github.com/dhyces/CompostBag/blob/main/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/compost-bag"
+logoFile="icon.png"
+authors="dhyces"
 description='''
 Adds a bag that composts items like the composter and works like the bundle
 '''
