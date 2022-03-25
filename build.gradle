@@ -9,6 +9,7 @@ buildscript {
 		classpath 'org.parchmentmc:librarian:1.+'
     }
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
@@ -28,11 +29,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            mods {
-                compostbag {
-                    source sourceSets.main
-                }
-            }
+            mods { compostbag { source sourceSets.main } }
         }
 
         server {
@@ -41,26 +38,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            mods {
-                compostbag {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'compostbag', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                compostbag {
-                    source sourceSets.main
-                }
-            }
+            mods { compostbag { source sourceSets.main } }
         }
     }
 }
