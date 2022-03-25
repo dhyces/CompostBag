@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
-@EventBusSubscriber(modid = CompostBag.MODID, bus = Bus.MOD)
 public class Config {
 
 	
@@ -32,9 +31,5 @@ public class Config {
         final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         commonSpec = specPair.getRight();
         COMMON = specPair.getLeft();
-    }
-    
-    @SubscribeEvent
-    static void onFileReload(final ModConfigEvent.Reloading event) {
     }
 }
