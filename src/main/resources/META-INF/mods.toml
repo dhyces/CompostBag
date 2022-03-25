@@ -2,7 +2,7 @@ modLoader="javafml"
 loaderVersion="[39,)"
 license="MIT License"
 [[mods]]
-modId="compostbag
+modId="compostbag"
 version="${file.jarVersion}"
 displayName="Compost Bag"
 issueTrackerURL="https://github.com/dhyces/CompostBag"
