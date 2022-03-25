@@ -5,12 +5,8 @@ import org.lwjgl.glfw.GLFW;
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
-import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,7 +27,7 @@ public class Events {
 		}
 		var mc = Minecraft.getInstance();
 		if (mc.screen.children().stream().anyMatch(c -> c instanceof RecipeBookComponent) && mc.screen instanceof InventoryScreen screen) {
-			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem && Screen.hasControlDown()) {
+			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem && CompostBag.SHOW_TOOLTIP.isDown()) {
 				event.setCanceled(true);
 			}
 		}
@@ -39,14 +35,29 @@ public class Events {
 	
 	@SubscribeEvent
 	static void renderTooltipWhileHovering(final ContainerScreenEvent.DrawForeground e) {
-		var clientPlayer = Minecraft.getInstance().player;
-		var carried = clientPlayer.inventoryMenu.getCarried();
-		if (!Screen.hasControlDown() || carried.isEmpty() || !(carried.getItem() instanceof CompostBagItem))
+		var screen = e.getContainerScreen();
+		
+		var bag = ItemStack.EMPTY;
+		
+		var hoveredSlot = screen.getSlotUnderMouse();
+		var carried = screen.getMenu().getCarried();
+		if (hoveredSlot != null && isCompostBag(hoveredSlot.getItem()) && !carried.isEmpty()) {
+			bag = hoveredSlot.getItem();
+		}
+		else if (isCompostBag(carried))
+			bag = carried;
+		
+		if (!CompostBag.SHOW_TOOLTIP.isDown() || bag.isEmpty())
 			return;
 		
-		var screen = e.getContainerScreen();
 		var pose = e.getPoseStack();
-		screen.renderTooltip(pose, screen.getTooltipFromItem(carried), carried.getTooltipImage(), e.getMouseX()-screen.getGuiLeft(), e.getMouseY()-screen.getGuiTop(), carried);
+		var x = e.getMouseX()-screen.getGuiLeft();
+		var y = e.getMouseY()-screen.getGuiTop();
+		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
+	}
+	
+	private static boolean isCompostBag(ItemStack stack) {
+		return stack.getItem() instanceof CompostBagItem;
 	}
 	
 	static final Ticker TICKER = new Ticker(40, 30);
@@ -69,8 +80,9 @@ public class Events {
 				if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
 					return;
 				if (TICKER.tick() && item.getItem() instanceof CompostBagItem bag) {
-					var x = Minecraft.getInstance().mouseHandler.xpos() * Minecraft.getInstance().getWindow().getGuiScaledWidth() / Minecraft.getInstance().getWindow().getScreenWidth();
-					var y = Minecraft.getInstance().mouseHandler.ypos() * Minecraft.getInstance().getWindow().getGuiScaledHeight() / Minecraft.getInstance().getWindow().getScreenHeight();
+					var window = Minecraft.getInstance().getWindow();
+					var x = Minecraft.getInstance().mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
+					var y = Minecraft.getInstance().mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
 					screen.mouseReleased(x, y, 1);
 				}
 			}
