@@ -117,9 +117,16 @@ public class CompostBagItem extends Item {
 					slotItem.shrink(shrinkBy);
 					return true;
 				}
-				if (slotItem.is(Items.BONE_MEAL)) {
-
+				if (slotItem.is(Items.BONE_MEAL) && getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get()) {
+					insertBonemeal(bag, slotItem);
+					playInsertSound(player);
+					return true;
 				}
+			} else {
+				remove(bag, MAX_STACK_SIZE).ifPresent(c -> {
+					playRemoveSound(player);
+					slot.set(c);
+				});
 			}
 		}
 		return super.overrideStackedOnOther(bag, slot, clickAction, player);
@@ -147,9 +154,7 @@ public class CompostBagItem extends Item {
 					}
 				}
 				if (otherItem.is(Items.BONE_MEAL) && count < MAX_BONEMEAL_COUNT.get()) {
-					int growCount = Math.min(otherItem.getCount(), MAX_BONEMEAL_COUNT.get() - count);
-					growBonemealCount(bag, growCount);
-					otherItem.shrink(growCount);
+					insertBonemeal(bag, otherItem);
 					playInsertSound(player);
 				}
 			} else {
@@ -189,10 +194,6 @@ public class CompostBagItem extends Item {
 
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(ItemStack item) {
-		// TODO: I want to make it only show the special tooltip if it's not a creative item picker slot
-//		if (Minecraft.getInstance().screen != null && Minecraft.getInstance().screen instanceof CreativeModeInventoryScreen sc &&
-//				sc.getSlotUnderMouse() != null && sc.getMenu().getSlot(sc.getSlotUnderMouse().getContainerSlot()) == sc.getSlotUnderMouse())
-//			return Optional.empty();
 		return Optional.of(new CompostBagTooltip(getTagItem(item), getLevel(item), getBonemealCount(item)));
 	}
 
@@ -206,7 +207,7 @@ public class CompostBagItem extends Item {
 	}
 
 	private Optional<ItemStack> remove(ItemStack bag, int amount) {
-		var count = Math.min(getBonemealCount(bag), MAX_STACK_SIZE);
+		var count = Math.min(getBonemealCount(bag), amount);
 		if (count == 0)
 			return Optional.empty();
 		ItemStack item = ItemHandlerHelper.copyStackWithSize(Items.BONE_MEAL.getDefaultInstance(), count);
