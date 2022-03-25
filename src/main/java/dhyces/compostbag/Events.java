@@ -32,13 +32,13 @@ public class Events {
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	static void renderTooltipWhileHovering(final ContainerScreenEvent.DrawForeground e) {
 		var screen = e.getContainerScreen();
-		
+
 		var bag = ItemStack.EMPTY;
-		
+
 		var hoveredSlot = screen.getSlotUnderMouse();
 		var carried = screen.getMenu().getCarried();
 		if (hoveredSlot != null && isCompostBag(hoveredSlot.getItem()) && !carried.isEmpty()) {
@@ -46,22 +46,22 @@ public class Events {
 		}
 		else if (isCompostBag(carried))
 			bag = carried;
-		
+
 		if (!CompostBag.SHOW_TOOLTIP.isDown() || bag.isEmpty())
 			return;
-		
+
 		var pose = e.getPoseStack();
 		var x = e.getMouseX()-screen.getGuiLeft();
 		var y = e.getMouseY()-screen.getGuiTop();
 		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
 	}
-	
+
 	private static boolean isCompostBag(ItemStack stack) {
 		return stack.getItem() instanceof CompostBagItem;
 	}
-	
+
 	static final Ticker TICKER = new Ticker(40, 30);
-	
+
 	@SubscribeEvent
 	static void multiDrop(final ContainerScreenEvent event) {
 		var clientPlayer = Minecraft.getInstance().player;
@@ -88,19 +88,19 @@ public class Events {
 			}
 		}
 	}
-	
+
 	static class Ticker {
 		int ticks;
 		final int first;
 		final int rest;
-		
-		/** On the first interaction, it should be a longer delay before more items are input. 
+
+		/** On the first interaction, it should be a longer delay before more items are input.
 		 * The rest should be fairly short, but enough delay to see items disappear.*/
 		public Ticker(int firstInteract, int rest) {
 			this.first = firstInteract;
 			this.rest = rest;
 		}
-		
+
 		/** Returns whether or not this tick should interact*/
 		public boolean tick() {
 			ticks++;
@@ -113,7 +113,7 @@ public class Events {
 			}
 			return false;
 		}
-		
+
 		public void restart() {
 			ticks = 0;
 		}

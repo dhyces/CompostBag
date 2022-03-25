@@ -1,19 +1,9 @@
 package dhyces.compostbag.item;
 
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-import com.electronwill.nightconfig.core.utils.IntDeque;
-import com.google.common.collect.Lists;
-
-import dhyces.compostbag.CompostBag;
 import dhyces.compostbag.Config;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -42,13 +32,14 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CompostBagItem extends Item {
-	
+
 	public static final String TAG_LEVEL = "Level";
 	public static final String TAG_COUNT = "Count";
 	public static final IntValue MAX_BONEMEAL_COUNT = Config.COMMON.MAX_BONEMEAL;
 	public static final int MAX_LEVEL = ComposterBlock.MAX_LEVEL;
 	public final DispenseItemBehavior DISPENSE_BEHAVIOR = new OptionalDispenseItemBehavior() {
-        protected ItemStack execute(BlockSource blockSource, ItemStack stack) {
+        @Override
+		protected ItemStack execute(BlockSource blockSource, ItemStack stack) {
             this.setSuccess(true);
             var level = blockSource.getLevel();
             var blockpos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
@@ -67,7 +58,7 @@ public class CompostBagItem extends Item {
 	public CompostBagItem() {
 		super(new Item.Properties().stacksTo(1).tab(CreativeModeTab.TAB_TOOLS));
 	}
-	
+
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		ItemStack bonemeal = getTagItem(context.getItemInHand());
@@ -81,24 +72,26 @@ public class CompostBagItem extends Item {
 		}
 		return InteractionResult.PASS;
 	}
-	
+
 	public static float getFullnessDisplay(ItemStack bag) {
 		return getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT.get();
 	}
-	
+
+	@Override
 	public boolean isBarVisible(ItemStack bag) {
 		return getBonemealCount(bag) > 0;
 	}
 
+	@Override
 	public int getBarWidth(ItemStack bag) {
 		return 1 + (int) ((float)getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT.get() * MAX_BAR_WIDTH - 1);
 	}
-	
+
 	@Override
 	public int getBarColor(ItemStack p_150901_) {
 		return Mth.color(0.4F, 0.4F, 1.0F);
 	}
-	
+
 	@Override
 	public boolean overrideStackedOnOther(ItemStack bag, Slot slot, ClickAction clickAction, Player player) {
 		if (clickAction == ClickAction.SECONDARY) {
@@ -125,13 +118,13 @@ public class CompostBagItem extends Item {
 					return true;
 				}
 				if (slotItem.is(Items.BONE_MEAL)) {
-					
+
 				}
 			}
 		}
 		return super.overrideStackedOnOther(bag, slot, clickAction, player);
 	}
-	
+
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
@@ -169,31 +162,31 @@ public class CompostBagItem extends Item {
 		}
 		return super.overrideOtherStackedOnMe(bag, otherItem, slot, clickAction, player, slotAccess);
 	}
-	
+
 	private InteractionResultHolder<ItemStack> compost(ItemStack bag, ItemStack item, Player player) {
 		var compostable = getCompostable(item);
 		if (compostable == 0)
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 		var lvl = getLevel(bag);
-		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.getRandom().nextDouble() < (double)compostable))
+		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.getRandom().nextDouble() < compostable))
 			return InteractionResultHolder.consume(ItemStack.EMPTY);
 		if (lvl < MAX_LEVEL)
 			return InteractionResultHolder.success(ItemStack.EMPTY);
 		return InteractionResultHolder.success(new ItemStack(Items.BONE_MEAL));
 	}
-	
+
 	private boolean isBagFull(ItemStack stack) {
 		return getBonemealCount(stack) >= MAX_BONEMEAL_COUNT.get() && getLevel(stack) >= MAX_LEVEL;
 	}
-	
+
 	private boolean isCompostable(ItemStack stack) {
 		return ComposterBlock.COMPOSTABLES.containsKey(stack.getItem());
 	}
-	
+
 	private float getCompostable(ItemStack stack) {
 		return ComposterBlock.COMPOSTABLES.getOrDefault(stack.getItem(), 0.0F);
 	}
-	
+
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(ItemStack item) {
 		// TODO: I want to make it only show the special tooltip if it's not a creative item picker slot
@@ -202,7 +195,7 @@ public class CompostBagItem extends Item {
 //			return Optional.empty();
 		return Optional.of(new CompostBagTooltip(getTagItem(item), getLevel(item), getBonemealCount(item)));
 	}
-	
+
 	private ItemStack insertBonemeal(ItemStack bag, ItemStack bonemeal) {
 		if (bonemeal.isEmpty() || !(bonemeal.getItem() instanceof BoneMealItem))
 			return bonemeal;
@@ -211,7 +204,7 @@ public class CompostBagItem extends Item {
 		bonemeal.shrink(max);
 		return bonemeal;
 	}
-	
+
 	private Optional<ItemStack> remove(ItemStack bag, int amount) {
 		var count = Math.min(getBonemealCount(bag), MAX_STACK_SIZE);
 		if (count == 0)
@@ -220,18 +213,18 @@ public class CompostBagItem extends Item {
 		growBonemealCount(bag, -count);
 		return Optional.of(item);
 	}
-	
+
 	private ItemStack getTagItem(ItemStack bag) {
 		ItemStack stack = Items.BONE_MEAL.getDefaultInstance().copy();
 		stack.setCount(getBonemealCount(bag));
 		if (stack.getCount() == 0) stack = ItemStack.EMPTY;
 		return stack;
 	}
-	
+
 	private void growBonemealCount(ItemStack bag, int amount) {
 		setBonemealCount(bag, getBonemealCount(bag)+amount);
 	}
-	
+
 	private void setBonemealCount(ItemStack bag, int count) {
 		if (count == 0) {
 			bag.removeTagKey(TAG_COUNT);
@@ -239,15 +232,15 @@ public class CompostBagItem extends Item {
 		}
 		bag.getOrCreateTag().putInt(TAG_COUNT, count);
 	}
-	
+
 	private static int getBonemealCount(ItemStack bag) {
 		return bag.getOrCreateTag().getInt(TAG_COUNT);
 	}
-	
+
 	private void growLevel(ItemStack bag, int amount) {
 		setLevel(bag, getLevel(bag)+amount);
 	}
-	
+
 	private void setLevel(ItemStack bag, int lvl) {
 		if (lvl == 0) {
 			bag.removeTagKey(TAG_LEVEL);
@@ -255,27 +248,27 @@ public class CompostBagItem extends Item {
 		}
 		bag.getOrCreateTag().putInt(TAG_LEVEL, lvl);
 	}
-	
+
 	private int getLevel(ItemStack bag) {
 		return bag.getOrCreateTag().getInt(TAG_LEVEL);
 	}
-	
+
 	private void playBonemealSound(Level level, BlockPos pos) {
 		level.playSound((Player)null, pos, SoundEvents.BONE_MEAL_USE, SoundSource.PLAYERS, 0.8F, 0.8F + level.getRandom().nextFloat() * 0.4F);
-	} 
-	
+	}
+
 	private void playFillSound(Player player) {
 		player.playSound(SoundEvents.COMPOSTER_FILL, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
 	}
-	
+
 	private void playFillSuccessSound(Player player) {
 		player.playSound(SoundEvents.COMPOSTER_FILL_SUCCESS, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
 	}
-	
+
 	private void playReadySound(Player player) {
 		player.playSound(SoundEvents.COMPOSTER_READY, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
 	}
-	
+
 	private void playRemoveSound(Player player) {
 		player.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
 	}
