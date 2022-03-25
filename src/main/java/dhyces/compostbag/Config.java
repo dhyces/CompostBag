@@ -7,7 +7,6 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 public class Config {
 
-
 	public static class Common {
 
 		public final IntValue MAX_BONEMEAL;

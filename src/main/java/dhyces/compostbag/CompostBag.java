@@ -21,8 +21,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-// TODO: remove me, im temporary. Put a breakpoint on com.electronwill.nightconfig.core.utils.IntDeque#addLast and change the config in npp.
-// it should result in a "config incorrect. Correcting".
 @Mod(CompostBag.MODID)
 public class CompostBag {
 
