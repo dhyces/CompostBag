@@ -89,7 +89,7 @@ public class CompostBagItem extends Item {
 
 	@Override
 	public int getBarColor(ItemStack bag) {
-		return getBonemealCount(bag) != MAX_BONEMEAL_COUNT.get() ? 0x6666FF : 0xFF3737;
+		return getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get() ? 0x6666FF : 0xFF3737;
 	}
 
 	@Override
