@@ -5,5 +5,11 @@
   },
   "1.18.1": {
     "1.0.0r": "Initial release"
+  },
+  "promos": {
+    "1.18.2-latest": "1.0.0r",
+    "1.18.2-recommended": "1.0.0r",
+	"1.18.1-latest": "1.0.0r",
+    "1.18.1-recommended": "1.0.0r"
   }
 }
