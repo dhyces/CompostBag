@@ -1,18 +1,12 @@
 package dhyces.compostbag;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.mojang.blaze3d.platform.InputConstants;
 
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
