@@ -194,7 +194,7 @@ public class CompostBagItem extends Item {
 
 	@Override
 	public Optional<TooltipComponent> getTooltipImage(ItemStack item) {
-		return Optional.of(new CompostBagTooltip(getTagItem(item), getLevel(item), getBonemealCount(item)));
+		return Optional.of(new CompostBagTooltip(getLevel(item), getBonemealCount(item)));
 	}
 
 	private ItemStack insertBonemeal(ItemStack bag, ItemStack bonemeal) {
