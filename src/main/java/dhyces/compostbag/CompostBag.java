@@ -26,10 +26,6 @@ public class CompostBag {
 
 	public static final String MODID = "compostbag";
 
-	public static final Logger LOGGER = LogManager.getLogger(CompostBag.class);
-
-	public static final KeyMapping SHOW_TOOLTIP = new KeyMapping("key.compostbag.showTooltip", InputConstants.KEY_LCONTROL, "key.categories.compostbag");
-
     public CompostBag() {
     	var modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -53,7 +49,6 @@ public class CompostBag {
     				return CompostBagItem.getFullnessDisplay(stack);
     			});
     		MinecraftForgeClient.registerTooltipComponentFactory(CompostBagTooltip.class, ClientCompostBagTooltip::new);
-    		ClientRegistry.registerKeyBinding(SHOW_TOOLTIP);
     	});
     }
 }

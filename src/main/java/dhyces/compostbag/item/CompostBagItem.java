@@ -105,7 +105,7 @@ public class CompostBagItem extends Item {
 							if (!result.getObject().isEmpty()) {
 								setLevel(bag, ComposterBlock.MIN_LEVEL);
 								growBonemealCount(bag, 1);
-							} else {
+							} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
 								growLevel(bag, 1);
 							}
 							shrinkBy++;
@@ -145,7 +145,7 @@ public class CompostBagItem extends Item {
 							setLevel(bag, ComposterBlock.MIN_LEVEL);
 							growBonemealCount(bag, 1);
 							playReadySound(player);
-						} else {
+						} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
 							growLevel(bag, 1);
 							playFillSuccessSound(player);
 						}

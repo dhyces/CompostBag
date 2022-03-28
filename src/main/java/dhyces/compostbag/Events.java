@@ -27,7 +27,7 @@ public class Events {
 		}
 		var mc = Minecraft.getInstance();
 		if (mc.screen.children().stream().anyMatch(c -> c instanceof RecipeBookComponent) && mc.screen instanceof InventoryScreen screen) {
-			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem && CompostBag.SHOW_TOOLTIP.isDown()) {
+			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem) {
 				event.setCanceled(true);
 			}
 		}
@@ -47,7 +47,7 @@ public class Events {
 		else if (isCompostBag(carried))
 			bag = carried;
 
-		if (!CompostBag.SHOW_TOOLTIP.isDown() || bag.isEmpty())
+		if (bag.isEmpty())
 			return;
 
 		var pose = e.getPoseStack();
