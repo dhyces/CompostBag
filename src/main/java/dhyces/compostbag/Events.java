@@ -22,7 +22,7 @@ public class Events {
 
 	@SubscribeEvent
 	static void cancelOtherTooltips(final RenderTooltipEvent.GatherComponents event) {
-		if (event.getTooltipElements().get(1).right().map(c -> c instanceof CompostBagTooltip).orElse(false)) {
+		if (event.getTooltipElements().stream().anyMatch(c -> c.right().map(b -> b instanceof CompostBagTooltip).orElse(false))) {
 			return;
 		}
 		var mc = Minecraft.getInstance();
