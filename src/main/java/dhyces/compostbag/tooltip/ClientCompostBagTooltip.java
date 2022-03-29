@@ -42,7 +42,7 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 	public int getWidth(Font font) {
 		var title = new TranslatableComponent("item.compostbag.compost_bag");
 		var titleWidth = font.width(title);
-		var countTextWidth = neededTextWidth(font);
+		var countTextWidth = font.width(countText());
 		var binWidth = 20;
 		var extended = countTextWidth + binWidth < titleWidth ? titleWidth : titleWidth + (countTextWidth + binWidth - titleWidth);
 		return extended;
@@ -50,35 +50,23 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 
 	@Override
 	public void renderText(Font pFont, int pX, int pY, Matrix4f pMatrix4f, BufferSource pBufferSource) {
-		var text = allText();
-		pFont.drawInBatch(text, pX + getWidth(pFont) - neededTextWidth(pFont), pY+13, count == 0 ? 0x999999 : 0xFFFFFF, false, pMatrix4f, pBufferSource, false, 0, 0xFF);
+		var text = countText();
+		pFont.drawInBatch(text, pX + getWidth(pFont) - pFont.width(text), pY+13, count == 0 ? 0x999999 : 0xFFFFFF, false, pMatrix4f, pBufferSource, false, 0, 0xFF);
 	}
 	
-	private String allText() {
-		return countText() + "/" + maxText();
-	}
-
 	private String countText() {
-		return String.valueOf(count);
+		return String.valueOf(count) + "/" + String.valueOf(CompostBagItem.MAX_BONEMEAL_COUNT.get());
 	}
 	
-	private int neededTextWidth(Font font) {
-		var t = maxText();
-		return font.width(t + "/" + t);
-	}
-	
-	private String maxText() {
-		return String.valueOf(CompostBagItem.MAX_BONEMEAL_COUNT.get());
-	}
 
 	@Override
 	public void renderImage(Font font, int x, int y, PoseStack pose, ItemRenderer renderer, int blitOffset) {
 		this.blitBin(pose, x, y, blitOffset);
 		this.blitFill(pose, x, y, blitOffset);
 
-		int slash = getWidth(font) - (font.width(allText()) / 2);
+		int center = getWidth(font)-10 - (font.width(countText()) / 2);
 
-		renderer.renderGuiItem(bonemeal, x+slash-10, y-3);
+		renderer.renderGuiItem(bonemeal, x+center, y-3);
 	}
 
 	private void blitFill(PoseStack pose, int x, int y, int offset) {
