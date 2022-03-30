@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
@@ -60,18 +62,19 @@ public class Events {
 		return stack.getItem() instanceof CompostBagItem;
 	}
 
-	static final Ticker TICKER = new Ticker(40, 30);
+	static final Ticker TICKER = new Ticker(20, 9);
 
 	@SubscribeEvent
-	static void multiDrop(final ContainerScreenEvent event) {
+	static void multiDrop(final ClientTickEvent event) {
 		var clientPlayer = Minecraft.getInstance().player;
-		if (clientPlayer == null)
+		var s = Minecraft.getInstance().screen;
+		if (clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
 		var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT);
 		if (mouseDown == GLFW.GLFW_RELEASE) {
 			TICKER.restart();
 		}
-		var screen = event.getContainerScreen();
+		var screen = (AbstractContainerScreen<?>) s;
 		if (mouseDown == GLFW.GLFW_PRESS) {
 			var slot = screen.getSlotUnderMouse();
 			if (slot != null && slot.hasItem()) {
