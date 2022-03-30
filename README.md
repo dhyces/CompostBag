@@ -1,4 +1,4 @@
-![Compost Bag](https://github.com/dhyces/CompostBag/raw/update.json/marketing/compost_bag.png "Compost Bag")
+![Compost Bag](https://github.com/dhyces/CompostBag/raw/info/marketing/compost_bag.png "Compost Bag")
 ![Requires Forge](https://img.shields.io/static/v1?style=for-the-badge&label=Loader&message=Forge&color=a8320c "Requires Forge")![1.18.X](https://img.shields.io/static/v1?style=for-the-badge&label=Versions&message=1.18.x&color=a8320c "1.18.X")
 <div><iframe allowfullscreen="allowfullscreen" src="https://www.youtube.com/embed/ROD3kYJVJ5k?wmode=transparent" height="358" width="638"></iframe></div>
 
