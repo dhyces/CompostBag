@@ -1,8 +1,6 @@
 ![Compost Bag](https://github.com/dhyces/CompostBag/raw/info/marketing/compost_bag.png "Compost Bag")
 ![Requires Forge](https://img.shields.io/static/v1?style=for-the-badge&label=Loader&message=Forge&color=a8320c "Requires Forge")![1.18.X](https://img.shields.io/static/v1?style=for-the-badge&label=Versions&message=1.18.x&color=a8320c "1.18.X")
 
-https://www.youtube.com/embed/ROD3kYJVJ5k?wmode=transparent
-
 ---
 The compost bag is a utility item that allows you to compost items on the go, without needing to place down any pesky blocks!
 # In GUI
