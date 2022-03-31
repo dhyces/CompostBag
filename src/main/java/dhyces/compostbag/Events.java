@@ -45,10 +45,10 @@ public class Events {
 
 		var hoveredSlot = screen.getSlotUnderMouse();
 		var carried = screen.getMenu().getCarried();
-		if (hoveredSlot != null && isCompostBag(hoveredSlot.getItem()) && !carried.isEmpty()) {
+		if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof CompostBagItem && !carried.isEmpty()) {
 			bag = hoveredSlot.getItem();
 		}
-		else if (isCompostBag(carried))
+		else if (carried.getItem() instanceof CompostBagItem)
 			bag = carried;
 
 		if (bag.isEmpty())
@@ -58,10 +58,6 @@ public class Events {
 		var x = e.getMouseX()-screen.getGuiLeft();
 		var y = e.getMouseY()-screen.getGuiTop();
 		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
-	}
-
-	private static boolean isCompostBag(ItemStack stack) {
-		return stack.getItem() instanceof CompostBagItem;
 	}
 
 	static final Ticker TICKER = new Ticker(20, 9);
