@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BoneMealItem;
@@ -135,6 +136,8 @@ public class CompostBagItem extends Item {
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
+		if (slot instanceof ResultSlot)
+			return false;
 		if (clickAction == ClickAction.SECONDARY) {
 			if (!otherItem.isEmpty()) {
 				var count = getBonemealCount(bag);
