@@ -2,6 +2,8 @@ package dhyces.compostbag;
 
 import org.lwjgl.glfw.GLFW;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.Minecraft;
@@ -70,7 +72,7 @@ public class Events {
 		var s = Minecraft.getInstance().screen;
 		if (clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
-		var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), GLFW.GLFW_MOUSE_BUTTON_RIGHT);
+		var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
 		if (mouseDown == GLFW.GLFW_RELEASE) {
 			TICKER.restart();
 		}
