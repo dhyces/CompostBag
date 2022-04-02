@@ -8,6 +8,8 @@ import java.util.ServiceLoader;
 public class Services {
 
     public static final IPlatformHelper PLATFORM = load(IPlatformHelper.class);
+    public static final IPlatformHelper.ItemHelper ITEM_HELPER = load(IPlatformHelper.ItemHelper.class);
+    public static final IPlatformHelper.IConfig CONFIG = load(IPlatformHelper.IConfig.class);
 
     public static <T> T load(Class<T> clazz) {
 

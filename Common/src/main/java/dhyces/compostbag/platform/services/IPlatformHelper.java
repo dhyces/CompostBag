@@ -1,5 +1,9 @@
 package dhyces.compostbag.platform.services;
 
+import net.minecraft.world.item.ItemStack;
+
+import java.util.function.Supplier;
+
 public interface IPlatformHelper {
 
     /**
@@ -24,5 +28,11 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
+    public interface ItemHelper {
+        public ItemStack copyWithSize(ItemStack stack, int size);
+    }
 
+    public interface IConfig {
+        public Supplier<Integer> maxBonemeal();
+    }
 }
