@@ -1,8 +1,9 @@
 package dhyces.compostbag.item;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
-import dhyces.compostbag.Config;
+import dhyces.compostbag.platform.Services;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
@@ -28,16 +29,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CompostBagItem extends Item {
 
 	public static final String TAG_LEVEL = "Level";
 	public static final String TAG_COUNT = "Count";
-	public static final IntValue MAX_BONEMEAL_COUNT = Config.COMMON.MAX_BONEMEAL;
+	public static final Supplier<Integer> MAX_BONEMEAL_COUNT = Services.PLATFORM.maxBonemeal();
 	public static final int MAX_LEVEL = ComposterBlock.MAX_LEVEL;
-	public final DispenseItemBehavior DISPENSE_BEHAVIOR = new OptionalDispenseItemBehavior() {
+	public static final DispenseItemBehavior DISPENSE_BEHAVIOR = new OptionalDispenseItemBehavior() {
         @Override
 		protected ItemStack execute(BlockSource blockSource, ItemStack stack) {
             this.setSuccess(true);
@@ -64,7 +63,7 @@ public class CompostBagItem extends Item {
 		ItemStack bonemeal = getTagItem(context.getItemInHand());
 		Level level = context.getLevel();
 		BlockPos blockpos = context.getClickedPos();
-		if (!bonemeal.isEmpty() && BoneMealItem.applyBonemeal(bonemeal, level, blockpos, context.getPlayer())) {
+		if (!bonemeal.isEmpty() && Services.PLATFORM.bonemeal(bonemeal, level, blockpos, context.getPlayer())) {
 			setBonemealCount(context.getItemInHand(), bonemeal.getCount());
 			playBonemealSound(level, blockpos);
 			level.levelEvent(1505, blockpos, 0);
@@ -212,12 +211,12 @@ public class CompostBagItem extends Item {
 		var count = Math.min(getBonemealCount(bag), amount);
 		if (count == 0)
 			return Optional.empty();
-		ItemStack item = ItemHandlerHelper.copyStackWithSize(Items.BONE_MEAL.getDefaultInstance(), count);
+		ItemStack item = Services.PLATFORM.copyWithSize(Items.BONE_MEAL.getDefaultInstance(), count);
 		growBonemealCount(bag, -count);
 		return Optional.of(item);
 	}
 
-	private ItemStack getTagItem(ItemStack bag) {
+	private static ItemStack getTagItem(ItemStack bag) {
 		ItemStack stack = Items.BONE_MEAL.getDefaultInstance().copy();
 		stack.setCount(getBonemealCount(bag));
 		if (stack.getCount() == 0) stack = ItemStack.EMPTY;
@@ -228,7 +227,7 @@ public class CompostBagItem extends Item {
 		setBonemealCount(bag, getBonemealCount(bag)+amount);
 	}
 
-	private void setBonemealCount(ItemStack bag, int count) {
+	private static void setBonemealCount(ItemStack bag, int count) {
 		if (count == 0) {
 			bag.removeTagKey(TAG_COUNT);
 			return;
