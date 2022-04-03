@@ -1,4 +1,4 @@
-package dhyces.compostbag.platform;
+package dhyces.compostbag;
 
 import dhyces.compostbag.platform.services.IPlatformHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -8,12 +8,7 @@ import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 
 import java.util.function.Supplier;
 
-public class Config implements IPlatformHelper.IConfig {
-
-	@Override
-	public Supplier<Integer> maxBonemeal() {
-		return () -> {return COMMON.MAX_BONEMEAL.get();};
-	}
+public class Config {
 
 	public static class Common {
 
