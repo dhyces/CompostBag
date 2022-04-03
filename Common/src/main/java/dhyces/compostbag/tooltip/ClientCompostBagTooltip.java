@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 
-import dhyces.compostbag.CompostBag;
 import dhyces.compostbag.Constants;
 import dhyces.compostbag.item.CompostBagItem;
 import net.minecraft.client.gui.Font;
@@ -16,15 +15,12 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class ClientCompostBagTooltip implements ClientTooltipComponent {
 
 	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Constants.MOD_ID, "textures/gui/compost_bag_tooltip.png");
 
-	private ItemStack bonemeal = Items.BONE_MEAL.getDefaultInstance();
+	private final ItemStack bonemeal = Items.BONE_MEAL.getDefaultInstance();
 	private int level;
 	private int count;
 
