@@ -1,6 +1,6 @@
 {
     "pack": {
-        "description": "${mod_name}",
+        "description": "compostbag resources",
         "pack_format": 8
     }
 }
