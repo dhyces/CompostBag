@@ -1,12 +1,14 @@
 {
     "required": true,
     "minVersion": "0.8",
-    "package": "com.example.examplemod.mixin",
+    "package": "dhyces.compostbag.mixin",
     "compatibilityLevel": "JAVA_16",
     "mixins": [
     ],
     "client": [
-      "dhyces.compostbag.mixin.ExampleMixin"
+      "GatherTooltipsMixin",
+	  "RenderHoveredTooltip",
+	  "ClientTooltipCreate"
     ],
     "injectors": {
       "defaultRequire": 1
