@@ -1,6 +1,12 @@
 package dhyces.compostbag.platform.services;
 
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
@@ -28,11 +34,11 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
-    public interface ItemHelper {
-        public ItemStack copyWithSize(ItemStack stack, int size);
-    }
+    Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj);
 
-    public interface IConfig {
-        public Supplier<Integer> maxBonemeal();
-    }
+    public ItemStack copyWithSize(ItemStack stack, int size);
+
+    public boolean bonemeal(ItemStack stack, Level level, BlockPos blockPos, Player player);
+
+    public Supplier<Integer> maxBonemeal();
 }
