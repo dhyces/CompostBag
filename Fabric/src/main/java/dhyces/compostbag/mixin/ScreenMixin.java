@@ -22,7 +22,6 @@ public class ScreenMixin {
         if (!list.stream().anyMatch(c -> c instanceof ClientCompostBagTooltip) && Minecraft.getInstance().screen instanceof AbstractContainerScreen screen) {
             if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem) {
                 ci.cancel();
-                System.out.println("Cancelled on Twitter.com");
             }
         }
     }
