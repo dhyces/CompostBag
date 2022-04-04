@@ -6,9 +6,9 @@
     "mixins": [
     ],
     "client": [
-      "ScreenMixin",
-	  "AbstractContainerScreenMixin",
-	  "ClientTooltipComponentMixin"
+      "AbstractContainerScreenMixin",
+      "ClientTooltipComponentMixin",
+      "ScreenMixin"
     ],
     "injectors": {
       "defaultRequire": 1
