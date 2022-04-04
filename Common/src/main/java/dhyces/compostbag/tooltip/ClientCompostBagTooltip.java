@@ -50,7 +50,7 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 	}
 
 	private String countText() {
-		return String.valueOf(count) + "/" + String.valueOf(CompostBagItem.MAX_BONEMEAL_COUNT.get());
+		return count + "/" + CompostBagItem.MAX_BONEMEAL_COUNT.get();
 	}
 
 
