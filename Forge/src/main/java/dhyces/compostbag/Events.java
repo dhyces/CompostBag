@@ -2,6 +2,7 @@ package dhyces.compostbag;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dhyces.compostbag.item.CompostBagItem;
+import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
@@ -14,23 +15,22 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Arrays;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class Events {
 
 	@SubscribeEvent
-	static void cancelOtherTooltips(final RenderTooltipEvent.GatherComponents event) {
-		if (event.getTooltipElements().stream().anyMatch(c -> c.right().map(b -> b instanceof CompostBagTooltip).orElse(false))) {
-			return;
-		}
-		var mc = Minecraft.getInstance();
-		if (mc.screen.children().stream().anyMatch(c -> c instanceof RecipeBookComponent) && mc.screen instanceof InventoryScreen screen) {
-			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem) {
+	static void cancelOtherTooltips(final RenderTooltipEvent.Pre event) {
+		if (Minecraft.getInstance().screen instanceof AbstractContainerScreen screen) {
+			if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem && !event.getComponents().stream().anyMatch(c -> c instanceof ClientCompostBagTooltip)) {
 				event.setCanceled(true);
 			}
 		}
@@ -59,13 +59,13 @@ public class Events {
 		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
 	}
 
-	static final Ticker TICKER = new Ticker(20, 9);
+	static final Ticker TICKER = new Ticker(10, 5);
 
 	@SubscribeEvent
 	static void multiDrop(final ClientTickEvent event) {
 		var clientPlayer = Minecraft.getInstance().player;
 		var s = Minecraft.getInstance().screen;
-		if (clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
+		if (event.phase.equals(TickEvent.Phase.START) || clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
 		var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
 		if (mouseDown == GLFW.GLFW_RELEASE) {

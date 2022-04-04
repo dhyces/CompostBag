@@ -49,7 +49,7 @@ public abstract class AbstractContainerScreenMixin {
         screen.renderTooltip(poseStack, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y);
     }
 
-    private static final Ticker TICKER = new Ticker(20, 9);
+    private static final Ticker TICKER = new Ticker(10, 5);
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void multiDrop(CallbackInfo ci) {
