@@ -3,7 +3,6 @@ package dhyces.compostbag.platform;
 import dhyces.compostbag.Constants;
 import dhyces.compostbag.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

@@ -1,6 +1,5 @@
 package dhyces.compostbag.platform.services;
 
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;

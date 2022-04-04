@@ -1,6 +1,5 @@
 package dhyces.compostbag.platform;
 
-import dhyces.compostbag.Constants;
 import dhyces.compostbag.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;

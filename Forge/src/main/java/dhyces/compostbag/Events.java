@@ -1,12 +1,9 @@
 package dhyces.compostbag;
 
-import dhyces.compostbag.util.Ticker;
-import org.lwjgl.glfw.GLFW;
-
 import com.mojang.blaze3d.platform.InputConstants;
-
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
+import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -20,6 +17,7 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import org.lwjgl.glfw.GLFW;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)

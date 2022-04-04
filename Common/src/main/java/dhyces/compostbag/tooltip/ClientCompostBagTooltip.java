@@ -3,7 +3,6 @@ package dhyces.compostbag.tooltip;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-
 import dhyces.compostbag.Constants;
 import dhyces.compostbag.item.CompostBagItem;
 import net.minecraft.client.gui.Font;

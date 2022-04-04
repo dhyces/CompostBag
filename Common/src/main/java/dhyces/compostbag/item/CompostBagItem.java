@@ -1,8 +1,5 @@
 package dhyces.compostbag.item;
 
-import java.util.Optional;
-import java.util.function.Supplier;
-
 import dhyces.compostbag.platform.Services;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.core.BlockPos;
@@ -20,15 +17,14 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.DispenserBlock;
+
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class CompostBagItem extends Item {
 

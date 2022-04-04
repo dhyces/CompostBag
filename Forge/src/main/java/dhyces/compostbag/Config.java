@@ -1,12 +1,8 @@
 package dhyces.compostbag;
 
-import dhyces.compostbag.platform.services.IPlatformHelper;
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.IntValue;
-
-import java.util.function.Supplier;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Config {
 
