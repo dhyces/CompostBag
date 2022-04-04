@@ -29,6 +29,6 @@ public class Ticker {
             ticks = 0;
         }
         public boolean inProgress() {
-        return ticks > first;
+        return ticks >= first;
     }
 }
