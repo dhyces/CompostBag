@@ -20,7 +20,10 @@
     "entrypoints": {
       "main": [
         "dhyces.compostbag.CompostBag"
-      ]
+      ],
+	  "client": [
+		"dhyces.compostbag.CompostBag"
+	  ]
     },
     "mixins": [
       "compostbag.mixins.json"
