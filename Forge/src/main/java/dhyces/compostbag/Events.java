@@ -3,12 +3,9 @@ package dhyces.compostbag;
 import com.mojang.blaze3d.platform.InputConstants;
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
-import dhyces.compostbag.tooltip.CompostBagTooltip;
 import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,8 +17,6 @@ import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Arrays;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
