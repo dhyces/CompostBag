@@ -3,9 +3,9 @@ package dhyces.compostbag.mixin;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dhyces.compostbag.item.CompostBagItem;
-import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -16,6 +16,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static dhyces.compostbag.CompostBag.TICKER;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
@@ -23,6 +26,10 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow protected int topPos;
 
     @Shadow protected int leftPos;
+
+    @Shadow protected abstract void slotClicked(Slot $$0, int $$1, int $$2, ClickType $$3);
+
+    @Shadow protected boolean isQuickCrafting;
 
     @Accessor(value = "hoveredSlot")
     public abstract Slot getHoveredSlot();
@@ -49,19 +56,14 @@ public abstract class AbstractContainerScreenMixin {
         screen.renderTooltip(poseStack, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y);
     }
 
-    private static final Ticker TICKER = new Ticker(10, 5);
-
     @Inject(method = "tick", at = @At("TAIL"))
     private void multiDrop(CallbackInfo ci) {
-        var clientPlayer = Minecraft.getInstance().player;
-        var s = Minecraft.getInstance().screen;
-        if (clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
+        var mc = Minecraft.getInstance();
+        var clientPlayer = mc.player;
+        var screen = ((AbstractContainerScreen)(Object)this);
+        if (clientPlayer == null)
             return;
-        var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
-        if (mouseDown == GLFW.GLFW_RELEASE) {
-            TICKER.restart();
-        }
-        var screen = (AbstractContainerScreen<?>) s;
+        var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (mouseDown == GLFW.GLFW_PRESS) {
             var slot = getHoveredSlot();
             if (slot != null && slot.hasItem()) {
@@ -69,13 +71,22 @@ public abstract class AbstractContainerScreenMixin {
                 var carried = screen.getMenu().getCarried();
                 if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
                     return;
-                if (TICKER.tick() && item.getItem() instanceof CompostBagItem bag) {
-                    var window = Minecraft.getInstance().getWindow();
-                    var x = Minecraft.getInstance().mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
-                    var y = Minecraft.getInstance().mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
-                    screen.mouseReleased(x, y, 1);
+                if (TICKER.tick() && item.getItem() instanceof CompostBagItem) {
+                    slotClicked(slot, slot.index, mouseDown, ClickType.PICKUP);
                 }
             }
+        }
+    }
+
+    @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
+    private void cancelTickerClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT && mouseDown == GLFW.GLFW_RELEASE) {
+            if (TICKER.inProgress()) {
+                isQuickCrafting = false;
+                cir.setReturnValue(true);
+            }
+            TICKER.restart();
         }
     }
 }
