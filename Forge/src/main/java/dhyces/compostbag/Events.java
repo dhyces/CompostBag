@@ -6,12 +6,15 @@ import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
 import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ContainerScreenEvent;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -54,18 +57,16 @@ public class Events {
 		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
 	}
 
-	static final Ticker TICKER = new Ticker(10, 5);
+	public static final Ticker TICKER = new Ticker(10, 5);
 
 	@SubscribeEvent
 	static void multiDrop(final ClientTickEvent event) {
-		var clientPlayer = Minecraft.getInstance().player;
-		var s = Minecraft.getInstance().screen;
+		var mc = Minecraft.getInstance();
+		var clientPlayer = mc.player;
+		var s = mc.screen;
 		if (event.phase.equals(TickEvent.Phase.START) || clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
-		var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
-		if (mouseDown == GLFW.GLFW_RELEASE) {
-			TICKER.restart();
-		}
+		var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
 		var screen = (AbstractContainerScreen<?>) s;
 		if (mouseDown == GLFW.GLFW_PRESS) {
 			var slot = screen.getSlotUnderMouse();
@@ -74,13 +75,21 @@ public class Events {
 				var carried = screen.getMenu().getCarried();
 				if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
 					return;
-				if (TICKER.tick() && item.getItem() instanceof CompostBagItem bag) {
-					var window = Minecraft.getInstance().getWindow();
-					var x = Minecraft.getInstance().mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
-					var y = Minecraft.getInstance().mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
-					screen.mouseReleased(x, y, 1);
+				if (TICKER.tick() && item.getItem() instanceof CompostBagItem) {
+					mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	static void cancelRightClickTick(final ScreenEvent.MouseReleasedEvent.Pre event) {
+		var screen = Minecraft.getInstance().screen;
+		if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT && screen instanceof AbstractContainerScreen containerScreen) {
+			if (TICKER.inProgress())
+				containerScreen.isQuickCrafting = false;
+				event.setCanceled(true);
+			TICKER.restart();
 		}
 	}
 }
