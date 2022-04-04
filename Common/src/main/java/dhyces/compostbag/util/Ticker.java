@@ -28,4 +28,7 @@ public class Ticker {
         public void restart() {
             ticks = 0;
         }
+        public boolean inProgress() {
+        return ticks > first;
+    }
 }
