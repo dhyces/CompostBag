@@ -37,12 +37,12 @@ public class CompostBagItem extends Item {
 		protected ItemStack execute(BlockSource blockSource, ItemStack stack) {
             this.setSuccess(true);
             var level = blockSource.getLevel();
-            var blockpos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
+            var blockPos = blockSource.getPos().relative(blockSource.getBlockState().getValue(DispenserBlock.FACING));
             var bonemeal = getTagItem(stack);
-            if (bonemeal.isEmpty() || !BoneMealItem.growCrop(bonemeal, level, blockpos) && !BoneMealItem.growWaterPlant(bonemeal, level, blockpos, (Direction)null)) {
+            if (bonemeal.isEmpty() || !BoneMealItem.growCrop(bonemeal, level, blockPos) && !BoneMealItem.growWaterPlant(bonemeal, level, blockPos, (Direction)null)) {
                this.setSuccess(false);
             } else if (!level.isClientSide) {
-               level.levelEvent(1505, blockpos, 0);
+               level.levelEvent(1505, blockPos, 0);
                setBonemealCount(stack, bonemeal.getCount());
             }
 
