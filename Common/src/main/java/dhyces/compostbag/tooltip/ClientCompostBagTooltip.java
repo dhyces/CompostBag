@@ -10,7 +10,8 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,7 +36,7 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 
 	@Override
 	public int getWidth(Font font) {
-		var title = new TranslatableComponent("item.compostbag.compost_bag");
+		var title = Component.translatable("item.compostbag.compost_bag");
 		var titleWidth = font.width(title);
 		var countTextWidth = font.width(countText());
 		var binWidth = 20;
