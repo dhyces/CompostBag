@@ -18,7 +18,7 @@ import java.util.List;
 public class ScreenMixin {
 
     @Inject(method = "renderTooltipInternal", at = @At("HEAD"), cancellable = true)
-    private void gatherTooltips(PoseStack poseStack, List<ClientTooltipComponent> list, int i, int j, CallbackInfo ci) {
+    public void compostbag$gatherTooltips(PoseStack poseStack, List<ClientTooltipComponent> list, int i, int j, CallbackInfo ci) {
         if (!list.stream().anyMatch(c -> c instanceof ClientCompostBagTooltip) && Minecraft.getInstance().screen instanceof AbstractContainerScreen screen) {
             if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem) {
                 ci.cancel();

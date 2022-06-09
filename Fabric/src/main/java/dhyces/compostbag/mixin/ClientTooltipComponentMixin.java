@@ -14,7 +14,7 @@ public interface ClientTooltipComponentMixin {
 
     @Inject(method = "create(Lnet/minecraft/world/inventory/tooltip/TooltipComponent;)Lnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipComponent;",
             at = @At("HEAD"), cancellable = true)
-    private static void create(TooltipComponent tooltipComponent, CallbackInfoReturnable<ClientTooltipComponent> cir) {
+    private static void compostbag$create(TooltipComponent tooltipComponent, CallbackInfoReturnable<ClientTooltipComponent> cir) {
         if (tooltipComponent instanceof CompostBagTooltip t)
             cir.setReturnValue(new ClientCompostBagTooltip(t));
     }
