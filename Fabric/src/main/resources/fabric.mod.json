@@ -2,7 +2,7 @@
     "schemaVersion": 1,
     "id": "compostbag",
     "version": "${version}",
-  
+
     "name": "Compost Bag",
     "description": "Adds a bag that composts items like the composter and works like the bundle",
     "authors": [
@@ -12,10 +12,10 @@
       "homepage": "https://www.curseforge.com/minecraft/mc-mods/compost-bag",
       "sources": "https://github.com/dhyces/CompostBag"
     },
-  
+
     "license": "MIT",
     "icon": "assets/compostbag/icon.png",
-  
+
     "environment": "*",
     "entrypoints": {
       "main": [
@@ -28,12 +28,11 @@
     "mixins": [
       "compostbag.mixins.json"
     ],
-  
+
     "depends": {
-      "fabricloader": ">=0.13",
+      "fabricloader": ">=0.14",
       "fabric": "*",
-      "minecraft": "1.18.x",
+      "minecraft": "1.19.x",
       "java": ">=17"
     }
   }
-  
