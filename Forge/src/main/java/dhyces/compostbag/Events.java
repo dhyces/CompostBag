@@ -86,9 +86,10 @@ public class Events {
 	static void cancelRightClickTick(final ScreenEvent.MouseReleasedEvent.Pre event) {
 		var screen = Minecraft.getInstance().screen;
 		if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT && screen instanceof AbstractContainerScreen containerScreen) {
-			if (TICKER.inProgress())
+			if (TICKER.inProgress()) {
 				containerScreen.isQuickCrafting = false;
 				event.setCanceled(true);
+			}
 			TICKER.restart();
 		}
 	}
