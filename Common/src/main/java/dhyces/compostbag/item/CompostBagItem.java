@@ -2,12 +2,15 @@ package dhyces.compostbag.item;
 
 import dhyces.compostbag.platform.Services;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -95,7 +98,7 @@ public class CompostBagItem extends Item {
 		if (!slot.allowModification(player))
 			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (!player.level.isClientSide || player.getAbilities().instabuild) {
+			if (!player.level.isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
 				if (slot.hasItem()) {
 					var slotItem = slot.getItem();
 					if (isCompostable(slotItem)) {
@@ -140,7 +143,7 @@ public class CompostBagItem extends Item {
 		if (!slot.allowModification(player))
 			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (!player.level.isClientSide || player.getAbilities().instabuild) {
+			if (!player.level.isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
 				if (!otherItem.isEmpty()) {
 					var count = getBonemealCount(bag);
 					if (isCompostable(otherItem) && !isBagFull(bag)) {
@@ -265,23 +268,31 @@ public class CompostBagItem extends Item {
 	}
 
 	private void playFillSound(Player player) {
-		player.playSound(SoundEvents.COMPOSTER_FILL, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+		playerSound(player, SoundEvents.COMPOSTER_FILL, 0.8F);
 	}
 
 	private void playFillSuccessSound(Player player) {
-		player.playSound(SoundEvents.COMPOSTER_FILL_SUCCESS, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+		playerSound(player, SoundEvents.COMPOSTER_FILL_SUCCESS, 0.8F);
 	}
 
 	private void playReadySound(Player player) {
-		player.playSound(SoundEvents.COMPOSTER_READY, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+		playerSound(player, SoundEvents.COMPOSTER_READY, 0.8F);
 	}
 
 	private void playRemoveSound(Player player) {
-		player.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+		playerSound(player, SoundEvents.BUNDLE_REMOVE_ONE, 0.8F);
 	}
 
 	private void playInsertSound(Player player) {
-		player.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
-		player.playSound(SoundEvents.BONE_MEAL_USE, 0.4F, 0.8F + player.getLevel().getRandom().nextFloat() * 0.4F);
+		playerSound(player, SoundEvents.BUNDLE_INSERT, 0.8F);
+		playerSound(player, SoundEvents.BONE_MEAL_USE, 0.4F);
+	}
+
+	private void playerSound(Player player, SoundEvent event, float volume) {
+		var randPitch = 0.8F + player.level.random.nextFloat() * 0.4F;
+		if (player instanceof ServerPlayer serverPlayer)
+			serverPlayer.playNotifySound(event, SoundSource.PLAYERS, volume, randPitch);
+		else
+			player.playSound(event, volume, randPitch);
 	}
 }
