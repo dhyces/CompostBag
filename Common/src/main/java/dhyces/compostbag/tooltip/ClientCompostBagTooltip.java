@@ -40,7 +40,7 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 		var titleWidth = font.width(title);
 		var countTextWidth = font.width(countText());
 		var binWidth = 20;
-		var extended = countTextWidth + binWidth < titleWidth ? titleWidth : titleWidth + (countTextWidth + binWidth - titleWidth);
+		var extended = countTextWidth + binWidth < titleWidth ? titleWidth : countTextWidth + binWidth;
 		return extended;
 	}
 
