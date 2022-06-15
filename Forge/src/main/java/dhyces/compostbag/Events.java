@@ -79,7 +79,7 @@ public class Events {
 					return;
 				if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
 					if (screen instanceof CreativeModeInventoryScreen)
-						screen.getMenu().clicked(slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
+						screen.getMenu().clicked(slot.index == 0 ? slot.getContainerSlot() : slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 					else
 						mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				}
