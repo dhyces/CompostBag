@@ -136,7 +136,6 @@ public class CompostBagItem extends Item {
 		return super.overrideStackedOnOther(bag, slot, clickAction, player);
 	}
 
-	// TODO: discover a way to disallow this behavior on CreativeModeInventoryScreen$CustomCreativeSlot slots
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
