@@ -21,9 +21,9 @@
       "main": [
         "dhyces.compostbag.CompostBag"
       ],
-	  "client": [
-		"dhyces.compostbag.CompostBag"
-	  ]
+      "client": [
+        "dhyces.compostbag.CompostBagClient"
+      ]
     },
     "mixins": [
       "compostbag.mixins.json"
