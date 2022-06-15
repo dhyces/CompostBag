@@ -6,11 +6,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public class Config {
 
-	public static class Common {
+	public static class Server {
 
 		public final IntValue MAX_BONEMEAL;
 
-		public Common(ForgeConfigSpec.Builder builder) {
+		public Server(ForgeConfigSpec.Builder builder) {
 			builder.push("common");
 
 			MAX_BONEMEAL = builder.comment("Max bonemeal in compost bag")
@@ -19,11 +19,11 @@ public class Config {
 		}
 	}
 
-	static final ForgeConfigSpec commonSpec;
-    public static final Common COMMON;
+	static final ForgeConfigSpec serverSpec;
+    public static final Server SERVER;
     static {
-        final Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
-        commonSpec = specPair.getRight();
-        COMMON = specPair.getLeft();
+        final Pair<Server, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Server::new);
+		serverSpec = specPair.getRight();
+		SERVER = specPair.getLeft();
     }
 }
