@@ -1,7 +1,9 @@
 package dhyces.compostbag.platform;
 
+import dhyces.compostbag.CompostBag;
 import dhyces.compostbag.Constants;
 import dhyces.compostbag.platform.services.IPlatformHelper;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -32,9 +34,14 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isSideClient() {
+        return FabricLoader.getInstance().getEnvironmentType().equals(EnvType.CLIENT);
+    }
+
+    @Override
     public Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj) {
         var o = obj.get();
-        Registry.register(registry, new ResourceLocation(Constants.MOD_ID, "compost_bag"), o);
+        Registry.register(registry, new ResourceLocation(Constants.MOD_ID, id), o);
         return () -> o;
     }
 
@@ -52,6 +59,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public Supplier<Integer> maxBonemeal() {
-            return () -> 128;
+            return () -> CompostBag.MAX_BONEMEAL;
         }
 }
