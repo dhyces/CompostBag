@@ -77,10 +77,11 @@ public class Events {
 				var carried = screen.getMenu().getCarried();
 				if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
 					return;
-				//TODO: fix this event not working when in creative and using on the first slot of the hotbar
-				System.out.println("called");
 				if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
-					mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
+					if (screen instanceof CreativeModeInventoryScreen)
+						screen.getMenu().clicked(slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
+					else
+						mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				}
 			}
 		}
