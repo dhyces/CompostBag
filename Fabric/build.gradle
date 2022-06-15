@@ -27,7 +27,7 @@ loom {
             server()
             setConfigName("Fabric Server")
             ideConfigGenerated(true)
-            runDir("run")
+            runDir("runServer")
         }
     }
 }
