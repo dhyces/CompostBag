@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -33,6 +34,11 @@ public class ForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isSideClient() {
+        return FMLEnvironment.dist.isClient();
+    }
+
+    @Override
     public Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj) {
         return dhyces.compostbag.Registry.REGISTER.register(id, obj);
     }
@@ -50,6 +56,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public Supplier<Integer> maxBonemeal() {
-        return () -> Config.COMMON.MAX_BONEMEAL.get();
+        return () -> Config.SERVER.MAX_BONEMEAL.get();
     }
 }
