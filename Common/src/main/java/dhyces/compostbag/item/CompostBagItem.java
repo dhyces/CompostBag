@@ -134,7 +134,6 @@ public class CompostBagItem extends Item {
 	}
 
 	// TODO: discover a way to disallow this behavior on CreativeModeInventoryScreen$CustomCreativeSlot slots
-	// TODO: Still have to fix the client tooltip flickering due to client and server having different results
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
