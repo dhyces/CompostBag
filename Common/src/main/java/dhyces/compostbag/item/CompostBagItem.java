@@ -2,6 +2,7 @@ package dhyces.compostbag.item;
 
 import dhyces.compostbag.platform.Services;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
@@ -11,6 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -68,7 +70,7 @@ public class CompostBagItem extends Item {
 		return InteractionResult.PASS;
 	}
 
-	public static float getFullnessDisplay(ItemStack bag) {
+	public static float getFullnessDisplay(ItemStack bag, ClientLevel level, LivingEntity livingEntity, int seed) {
 		return getBonemealCount(bag) / (float)MAX_BONEMEAL_COUNT.get();
 	}
 
@@ -87,78 +89,86 @@ public class CompostBagItem extends Item {
 		return getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get() ? 0x6666FF : 0xFF3737;
 	}
 
+	//TODO: totally unnecessary, but I could make it so you could use it on ResultSlots
 	@Override
 	public boolean overrideStackedOnOther(ItemStack bag, Slot slot, ClickAction clickAction, Player player) {
+		if (!slot.allowModification(player))
+			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (slot.hasItem()) {
-				var slotItem = slot.getItem();
-				if (isCompostable(slotItem)) {
-					var shrinkBy = 0;
-					while (shrinkBy != slotItem.getCount() && !isBagFull(bag)) {
-						var result = compost(bag, slotItem, player);
-						if (result.getResult().consumesAction()) {
-							if (!result.getObject().isEmpty()) {
-								setLevel(bag, ComposterBlock.MIN_LEVEL);
-								growBonemealCount(bag, 1);
-							} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
-								growLevel(bag, 1);
+			if (!player.level.isClientSide || player.getAbilities().instabuild) {
+				if (slot.hasItem()) {
+					var slotItem = slot.getItem();
+					if (isCompostable(slotItem)) {
+						var shrinkBy = 0;
+						while (shrinkBy != slotItem.getCount() && !isBagFull(bag)) {
+							var result = compost(bag, slotItem, player);
+							if (result.getResult().consumesAction()) {
+								if (!result.getObject().isEmpty()) {
+									setLevel(bag, ComposterBlock.MIN_LEVEL);
+									growBonemealCount(bag, 1);
+								} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
+									growLevel(bag, 1);
+								}
+								shrinkBy++;
 							}
-							shrinkBy++;
 						}
+						if (shrinkBy > 0)
+							playReadySound(player);
+						playFillSound(player);
+						slotItem.shrink(shrinkBy);
 					}
-					if (shrinkBy > 0)
-						playReadySound(player);
-					playFillSound(player);
-					slotItem.shrink(shrinkBy);
-					return true;
+					if (slotItem.is(Items.BONE_MEAL) && getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get()) {
+						insertBonemeal(bag, slotItem);
+						playInsertSound(player);
+					}
+				} else {
+					remove(bag, MAX_STACK_SIZE).ifPresent(c -> {
+						playRemoveSound(player);
+						slot.set(c);
+					});
 				}
-				if (slotItem.is(Items.BONE_MEAL) && getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get()) {
-					insertBonemeal(bag, slotItem);
-					playInsertSound(player);
-					return true;
-				}
-			} else {
-				remove(bag, MAX_STACK_SIZE).ifPresent(c -> {
-					playRemoveSound(player);
-					slot.set(c);
-				});
 			}
+			return true;
 		}
 		return super.overrideStackedOnOther(bag, slot, clickAction, player);
 	}
 
+	// TODO: discover a way to disallow this behavior on CreativeModeInventoryScreen$CustomCreativeSlot slots
+	// TODO: Still have to fix the client tooltip flickering due to client and server having different results
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
-		if (slot instanceof ResultSlot)
+		if (!slot.allowModification(player))
 			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (!otherItem.isEmpty()) {
-				var count = getBonemealCount(bag);
-				if (isCompostable(otherItem) && !isBagFull(bag)) {
-					var result = compost(bag, otherItem, player);
-					if (result.getResult().consumesAction()) {
-						if (!result.getObject().isEmpty()) {
-							setLevel(bag, ComposterBlock.MIN_LEVEL);
-							growBonemealCount(bag, 1);
-							playReadySound(player);
-						} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
-							growLevel(bag, 1);
-							playFillSuccessSound(player);
+			if (!player.level.isClientSide || player.getAbilities().instabuild) {
+				if (!otherItem.isEmpty()) {
+					var count = getBonemealCount(bag);
+					if (isCompostable(otherItem) && !isBagFull(bag)) {
+						var result = compost(bag, otherItem, player);
+						if (result.getResult().consumesAction()) {
+							if (!result.getObject().isEmpty()) {
+								setLevel(bag, ComposterBlock.MIN_LEVEL);
+								growBonemealCount(bag, 1);
+								playReadySound(player);
+							} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
+								growLevel(bag, 1);
+								playFillSuccessSound(player);
+							}
+							playFillSound(player);
+							otherItem.shrink(1);
 						}
-						playFillSound(player);
-						otherItem.shrink(1);
 					}
+					if (otherItem.is(Items.BONE_MEAL) && count < MAX_BONEMEAL_COUNT.get()) {
+						insertBonemeal(bag, otherItem);
+						playInsertSound(player);
+					}
+				} else {
+					remove(bag, MAX_STACK_SIZE).ifPresent(c -> {
+						playRemoveSound(player);
+						slotAccess.set(c);
+					});
 				}
-				if (otherItem.is(Items.BONE_MEAL) && count < MAX_BONEMEAL_COUNT.get()) {
-					insertBonemeal(bag, otherItem);
-					playInsertSound(player);
-				}
-			} else {
-				remove(bag, MAX_STACK_SIZE).ifPresent(c -> {
-					playRemoveSound(player);
-					slotAccess.set(c);
-				});
 			}
 			return true;
 		}
@@ -170,7 +180,7 @@ public class CompostBagItem extends Item {
 		if (compostable == 0)
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 		var lvl = getLevel(bag);
-		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.getRandom().nextDouble() < compostable))
+		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.level.getRandom().nextDouble() < compostable))
 			return InteractionResultHolder.consume(ItemStack.EMPTY);
 		if (lvl < MAX_LEVEL)
 			return InteractionResultHolder.success(ItemStack.EMPTY);
