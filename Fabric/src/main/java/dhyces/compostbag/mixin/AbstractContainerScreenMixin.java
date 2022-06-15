@@ -2,6 +2,7 @@ package dhyces.compostbag.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dhyces.compostbag.CommonClient;
 import dhyces.compostbag.item.CompostBagItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -17,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static dhyces.compostbag.CompostBag.TICKER;
 
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
@@ -66,12 +65,14 @@ public abstract class AbstractContainerScreenMixin {
         var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (mouseDown == GLFW.GLFW_PRESS) {
             var slot = getHoveredSlot();
-            if (slot != null && slot.hasItem()) {
+            // A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
+            // See the implementation of canTakeItemForPickAll in the aforementioned menu class
+            if (slot != null && slot.hasItem() && screen.getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
                 var item = slot.getItem();
                 var carried = screen.getMenu().getCarried();
                 if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
                     return;
-                if (TICKER.tick() && item.getItem() instanceof CompostBagItem) {
+                if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
                     slotClicked(slot, slot.index, mouseDown, ClickType.PICKUP);
                 }
             }
@@ -82,11 +83,11 @@ public abstract class AbstractContainerScreenMixin {
     public void compostbag$cancelTickerClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (button == InputConstants.MOUSE_BUTTON_RIGHT && mouseDown == GLFW.GLFW_RELEASE) {
-            if (TICKER.inProgress()) {
+            if (CommonClient.getTickerInstance().inProgress()) {
                 isQuickCrafting = false;
                 cir.setReturnValue(true);
             }
-            TICKER.restart();
+            CommonClient.getTickerInstance().restart();
         }
     }
 }

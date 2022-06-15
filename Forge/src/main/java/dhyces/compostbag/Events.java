@@ -6,6 +6,7 @@ import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
 import dhyces.compostbag.util.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
@@ -57,25 +58,28 @@ public class Events {
 		screen.renderTooltip(pose, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y, bag);
 	}
 
-	public static final Ticker TICKER = new Ticker(10, 5);
 
 	@SubscribeEvent
 	static void multiDrop(final ClientTickEvent event) {
 		var mc = Minecraft.getInstance();
 		var clientPlayer = mc.player;
 		var s = mc.screen;
-		if (event.phase.equals(TickEvent.Phase.START) || clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
+		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
 		var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
 		var screen = (AbstractContainerScreen<?>) s;
 		if (mouseDown == GLFW.GLFW_PRESS) {
 			var slot = screen.getSlotUnderMouse();
-			if (slot != null && slot.hasItem()) {
+			// A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
+			// See the implementation of canTakeItemForPickAll in the aforementioned menu class
+			if (slot != null && slot.hasItem() && screen.getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
 				var item = slot.getItem();
 				var carried = screen.getMenu().getCarried();
 				if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
 					return;
-				if (TICKER.tick() && item.getItem() instanceof CompostBagItem) {
+				//TODO: fix this event not working when in creative and using on the first slot of the hotbar
+				System.out.println("called");
+				if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
 					mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				}
 			}
@@ -86,11 +90,11 @@ public class Events {
 	static void cancelRightClickTick(final ScreenEvent.MouseReleasedEvent.Pre event) {
 		var screen = Minecraft.getInstance().screen;
 		if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT && screen instanceof AbstractContainerScreen containerScreen) {
-			if (TICKER.inProgress()) {
+			if (CommonClient.getTickerInstance().inProgress()) {
 				containerScreen.isQuickCrafting = false;
 				event.setCanceled(true);
 			}
-			TICKER.restart();
+			CommonClient.getTickerInstance().restart();
 		}
 	}
 }
