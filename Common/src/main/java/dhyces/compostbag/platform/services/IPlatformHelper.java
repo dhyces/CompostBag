@@ -33,6 +33,8 @@ public interface IPlatformHelper {
      */
     boolean isDevelopmentEnvironment();
 
+    boolean isSideClient();
+
     Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj);
 
     public ItemStack copyWithSize(ItemStack stack, int size);
