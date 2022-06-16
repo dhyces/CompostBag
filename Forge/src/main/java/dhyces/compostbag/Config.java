@@ -11,7 +11,7 @@ public class Config {
 		public final IntValue MAX_BONEMEAL;
 
 		public Server(ForgeConfigSpec.Builder builder) {
-			builder.push("common");
+			builder.push("server");
 
 			MAX_BONEMEAL = builder.comment("Max bonemeal in compost bag")
 					.defineInRange("maxBonemeal", () -> 128, 0, Integer.MAX_VALUE);
