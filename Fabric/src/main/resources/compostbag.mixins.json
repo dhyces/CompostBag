@@ -4,6 +4,7 @@
   "package": "dhyces.compostbag.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "PlayerListMixin"
   ],
   "client": [
     "AbstractContainerScreenMixin",
@@ -14,4 +15,3 @@
     "defaultRequire": 1
   }
 }
-  
