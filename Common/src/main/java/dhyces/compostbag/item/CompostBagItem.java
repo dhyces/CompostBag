@@ -102,23 +102,7 @@ public class CompostBagItem extends Item {
 				if (slot.hasItem()) {
 					var slotItem = slot.getItem();
 					if (isCompostable(slotItem)) {
-						var shrinkBy = 0;
-						while (shrinkBy != slotItem.getCount() && !isBagFull(bag)) {
-							var result = compost(bag, slotItem, player);
-							if (result.getResult().consumesAction()) {
-								if (!result.getObject().isEmpty()) {
-									setLevel(bag, ComposterBlock.MIN_LEVEL);
-									growBonemealCount(bag, 1);
-								} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
-									growLevel(bag, 1);
-								}
-								shrinkBy++;
-							}
-						}
-						if (shrinkBy > 0)
-							playReadySound(player);
-						playFillSound(player);
-						slotItem.shrink(shrinkBy);
+						compostAll(bag, slotItem, player);
 					}
 					if (slotItem.is(Items.BONE_MEAL) && getBonemealCount(bag) < MAX_BONEMEAL_COUNT.get()) {
 						insertBonemeal(bag, slotItem);
@@ -136,6 +120,26 @@ public class CompostBagItem extends Item {
 		return super.overrideStackedOnOther(bag, slot, clickAction, player);
 	}
 
+	private void compostAll(ItemStack bag, ItemStack slotItem, Player player) {
+		var shrinkBy = 0;
+		while (shrinkBy != slotItem.getCount() && !isBagFull(bag)) {
+			var result = simulateCompost(bag, slotItem, player);
+			if (result.getResult().consumesAction()) {
+				if (!result.getObject().isEmpty()) {
+					setLevel(bag, ComposterBlock.MIN_LEVEL);
+					growBonemealCount(bag, 1);
+				} else if (result.getResult().equals(InteractionResult.SUCCESS)) {
+					growLevel(bag, 1);
+				}
+				shrinkBy++;
+			}
+		}
+		if (shrinkBy > 0)
+			playReadySound(player);
+		playFillSound(player);
+		slotItem.shrink(shrinkBy);
+	}
+
 	@Override
 	public boolean overrideOtherStackedOnMe(ItemStack bag, ItemStack otherItem, Slot slot,
 			ClickAction clickAction, Player player, SlotAccess slotAccess) {
@@ -146,7 +150,7 @@ public class CompostBagItem extends Item {
 				if (!otherItem.isEmpty()) {
 					var count = getBonemealCount(bag);
 					if (isCompostable(otherItem) && !isBagFull(bag)) {
-						var result = compost(bag, otherItem, player);
+						var result = simulateCompost(bag, otherItem, player);
 						if (result.getResult().consumesAction()) {
 							if (!result.getObject().isEmpty()) {
 								setLevel(bag, ComposterBlock.MIN_LEVEL);
@@ -176,7 +180,7 @@ public class CompostBagItem extends Item {
 		return super.overrideOtherStackedOnMe(bag, otherItem, slot, clickAction, player, slotAccess);
 	}
 
-	private InteractionResultHolder<ItemStack> compost(ItemStack bag, ItemStack item, Player player) {
+	private InteractionResultHolder<ItemStack> simulateCompost(ItemStack bag, ItemStack item, Player player) {
 		var compostable = getCompostable(item);
 		if (compostable == 0)
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
