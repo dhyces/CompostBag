@@ -3,18 +3,18 @@
   "pattern": [
     " S ",
     "LCL",
-	"LLL"
+    "LLL"
   ],
   "key": {
     "S": {
       "item": "minecraft:string"
     },
-	"L": {
-		"item": "minecraft:leather"
-	},
-	"C": {
-		"item": "minecraft:composter"
-	}
+    "L": {
+      "item": "minecraft:leather"
+    },
+    "C": {
+      "item": "minecraft:composter"
+    }
   },
   "result": {
     "item": "compostbag:compost_bag"

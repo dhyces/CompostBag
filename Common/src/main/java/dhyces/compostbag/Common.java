@@ -16,14 +16,14 @@ public class Common {
 
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
+    static {
+        COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(Registry.ITEM, "compost_bag", () -> new CompostBagItem());
+    }
+
     public static void init() {
     }
 
     public static ResourceLocation modLoc(String id) {
         return new ResourceLocation(Constants.MOD_ID, id);
-    }
-
-    static {
-        COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(Registry.ITEM, "compost_bag", () -> new CompostBagItem());
     }
 }

@@ -59,6 +59,6 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public Supplier<Integer> maxBonemeal() {
-            return () -> CompostBag.MAX_BONEMEAL;
-        }
+        return () -> CompostBag.MAX_BONEMEAL;
+    }
 }

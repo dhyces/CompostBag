@@ -22,20 +22,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
 
-    @Shadow protected int topPos;
+    @Shadow
+    protected int topPos;
 
-    @Shadow protected int leftPos;
+    @Shadow
+    protected int leftPos;
+    @Shadow
+    protected boolean isQuickCrafting;
 
-    @Shadow protected abstract void slotClicked(Slot slot, int slotIndex, int mouseButton, ClickType clickType);
-
-    @Shadow protected boolean isQuickCrafting;
+    @Shadow
+    protected abstract void slotClicked(Slot slot, int slotIndex, int mouseButton, ClickType clickType);
 
     @Accessor(value = "hoveredSlot")
     public abstract Slot getHoveredSlot();
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", shift = At.Shift.AFTER))
     public void compostbag$renderTooltipWhileHovering(PoseStack poseStack, int mouseX, int mouseY, float f, CallbackInfo ci) {
-        var screen = ((AbstractContainerScreen)(Object)this);
+        var screen = ((AbstractContainerScreen) (Object) this);
 
         var bag = ItemStack.EMPTY;
 
@@ -43,15 +46,14 @@ public abstract class AbstractContainerScreenMixin {
         var carried = screen.getMenu().getCarried();
         if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof CompostBagItem && !carried.isEmpty()) {
             bag = hoveredSlot.getItem();
-        }
-        else if (carried.getItem() instanceof CompostBagItem)
+        } else if (carried.getItem() instanceof CompostBagItem)
             bag = carried;
 
         if (bag.isEmpty())
             return;
 
-        var x = mouseX-leftPos;
-        var y = mouseY-topPos;
+        var x = mouseX - leftPos;
+        var y = mouseY - topPos;
         screen.renderTooltip(poseStack, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y);
     }
 
@@ -59,7 +61,7 @@ public abstract class AbstractContainerScreenMixin {
     public void compostbag$multiDrop(CallbackInfo ci) {
         var mc = Minecraft.getInstance();
         var clientPlayer = mc.player;
-        var screen = ((AbstractContainerScreen)(Object)this);
+        var screen = ((AbstractContainerScreen) (Object) this);
         if (clientPlayer == null)
             return;
         var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);

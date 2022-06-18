@@ -1,9 +1,14 @@
 {
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "compostbag:item/compost_bag"
-    },
-    "overrides": [
-        { "predicate": { "compostbag:filled": 0.5 }, "model": "compostbag:item/compost_bag_full" }
-    ]
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "compostbag:item/compost_bag"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "compostbag:filled": 0.5
+      },
+      "model": "compostbag:item/compost_bag_full"
+    }
+  ]
 }

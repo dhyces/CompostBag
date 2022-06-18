@@ -15,7 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
 
-    @Shadow public abstract void broadcastAll(Packet<?> $$0);
+    @Shadow
+    public abstract void broadcastAll(Packet<?> $$0);
 
     @Inject(method = "reloadResources", at = @At("TAIL"))
     private void compostbag$reloadResources(CallbackInfo info) {
