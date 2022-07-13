@@ -1,6 +1,7 @@
 {
   "homepage": "https://www.curseforge.com/minecraft/mc-mods/compost-bag",
   "1.19": {
+    "1.0.1r": "Port to post-client-refactor",
     "1.0.0r": "Initial release"
   },
   "1.18.2": {
@@ -10,8 +11,8 @@
     "1.0.0r": "Initial release"
   },
   "promos": {
-	  "1.19-latest": "1.0.0r",
-    "1.19-recommended": "1.0.0r",
+	  "1.19-latest": "1.0.1r",
+    "1.19-recommended": "1.0.1r",
     "1.18.2-latest": "1.0.0r",
     "1.18.2-recommended": "1.0.0r",
 	  "1.18.1-latest": "1.0.0r",
