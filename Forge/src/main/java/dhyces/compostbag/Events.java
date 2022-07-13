@@ -36,7 +36,7 @@ public class Events {
 	}
 
 	@SubscribeEvent
-	static void renderTooltipWhileHovering(final ContainerScreenEvent.DrawForeground e) {
+	static void renderTooltipWhileHovering(final ContainerScreenEvent.Render.Foreground e) {
 		var screen = e.getContainerScreen();
 
 		var bag = ItemStack.EMPTY;
@@ -88,7 +88,7 @@ public class Events {
 	}
 
 	@SubscribeEvent
-	static void cancelRightClickTick(final ScreenEvent.MouseReleasedEvent.Pre event) {
+	static void cancelRightClickTick(final ScreenEvent.MouseButtonReleased.Pre event) {
 		var screen = Minecraft.getInstance().screen;
 		if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT && screen instanceof AbstractContainerScreen containerScreen) {
 			if (CommonClient.getTickerInstance().inProgress()) {

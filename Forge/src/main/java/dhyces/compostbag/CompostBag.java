@@ -1,15 +1,12 @@
 package dhyces.compostbag;
 
-import com.google.common.collect.Maps;
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.tooltip.ClientCompostBagTooltip;
 import dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -17,12 +14,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryManager;
-
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Mod(Constants.MOD_ID)
 public class CompostBag {
@@ -35,6 +26,7 @@ public class CompostBag {
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             modBus.addListener(this::clientSetup);
+            modBus.addListener(this::registerTooltipComponents);
         });
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.serverSpec);
@@ -51,7 +43,10 @@ public class CompostBag {
     private void clientSetup(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             ItemProperties.register(Common.COMPOST_BAG_ITEM.get(), Common.modLoc("filled"), CompostBagItem::getFullnessDisplay);
-            MinecraftForgeClient.registerTooltipComponentFactory(CompostBagTooltip.class, ClientCompostBagTooltip::new);
         });
+    }
+
+    private void registerTooltipComponents(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(CompostBagTooltip.class, ClientCompostBagTooltip::new);
     }
 }
