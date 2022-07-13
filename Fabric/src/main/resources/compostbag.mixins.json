@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dhyces.compostbag.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "PlayerListMixin"
+  ],
+  "client": [
+    "AbstractContainerScreenMixin",
+    "ClientTooltipComponentMixin",
+    "ScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
