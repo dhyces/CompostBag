@@ -34,7 +34,7 @@ public abstract class AbstractContainerScreenMixin {
     public abstract Slot getHoveredSlot();
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", shift = At.Shift.AFTER))
-    public void compostbag$renderTooltipWhileHovering(PoseStack poseStack, int mouseX, int mouseY, float f, CallbackInfo ci) {
+    public void compostbag_renderTooltipWhileHovering(PoseStack poseStack, int mouseX, int mouseY, float f, CallbackInfo ci) {
         var screen = ((AbstractContainerScreen)(Object)this);
 
         var bag = ItemStack.EMPTY;
@@ -56,7 +56,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void compostbag$multiDrop(CallbackInfo ci) {
+    public void compostbag_multiDrop(CallbackInfo ci) {
         var mc = Minecraft.getInstance();
         var clientPlayer = mc.player;
         var screen = ((AbstractContainerScreen)(Object)this);
@@ -80,7 +80,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
-    public void compostbag$cancelTickerClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    public void compostbag_cancelTickerClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (button == InputConstants.MOUSE_BUTTON_RIGHT && mouseDown == GLFW.GLFW_RELEASE) {
             if (CommonClient.getTickerInstance().inProgress()) {

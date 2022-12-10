@@ -18,7 +18,7 @@ public abstract class PlayerListMixin {
     @Shadow public abstract void broadcastAll(Packet<?> $$0);
 
     @Inject(method = "reloadResources", at = @At("TAIL"))
-    private void compostbag$reloadResources(CallbackInfo info) {
+    private void compostbag_reloadResources(CallbackInfo info) {
         var packet = PacketByteBufs.create();
         packet.writeInt(Services.PLATFORM.maxBonemeal().get());
         broadcastAll(ServerPlayNetworking.createS2CPacket(Common.modLoc("config_sync"), packet));

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[41,)"
+loaderVersion="[44,)"
 license="MIT License"
 [[mods]]
 modId="compostbag"
@@ -17,6 +17,6 @@ Adds a bag that composts items like the composter and works like the bundle
 [[dependencies.compostbag]]
     modId="forge"
     mandatory=true
-    versionRange="[41.0.64,)"
+    versionRange="[44.0.0,)"
     ordering="NONE"
     side="BOTH"

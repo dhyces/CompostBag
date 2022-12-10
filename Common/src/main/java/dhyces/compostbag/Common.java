@@ -3,6 +3,8 @@ package dhyces.compostbag;
 import dhyces.compostbag.item.CompostBagItem;
 import dhyces.compostbag.platform.Services;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +26,6 @@ public class Common {
     }
 
     static {
-        COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(Registry.ITEM, "compost_bag", () -> new CompostBagItem());
+        COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(BuiltInRegistries.ITEM, "compost_bag", () -> new CompostBagItem());
     }
 }

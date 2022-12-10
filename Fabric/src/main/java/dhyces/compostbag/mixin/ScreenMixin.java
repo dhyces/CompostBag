@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,7 +19,7 @@ import java.util.List;
 public class ScreenMixin {
 
     @Inject(method = "renderTooltipInternal", at = @At("HEAD"), cancellable = true)
-    public void compostbag$gatherTooltips(PoseStack poseStack, List<ClientTooltipComponent> list, int i, int j, CallbackInfo ci) {
+    public void compostbag_gatherTooltips(PoseStack poseStack, List<ClientTooltipComponent> list, int i, int j, ClientTooltipPositioner clientTooltipPositioner, CallbackInfo ci) {
         if (!list.stream().anyMatch(c -> c instanceof ClientCompostBagTooltip) && Minecraft.getInstance().screen instanceof AbstractContainerScreen screen) {
             if (screen.getMenu().getCarried().getItem() instanceof CompostBagItem) {
                 ci.cancel();

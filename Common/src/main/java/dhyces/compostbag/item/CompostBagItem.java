@@ -56,7 +56,7 @@ public class CompostBagItem extends Item {
       };
 
 	public CompostBagItem() {
-		super(new Item.Properties().stacksTo(1).tab(CreativeModeTab.TAB_TOOLS));
+		super(new Item.Properties().stacksTo(1));
 	}
 
 	@Override
