@@ -54,7 +54,6 @@ public class CompostBag implements ModInitializer {
         Common.init();
         DispenserBlock.registerBehavior(Common.COMPOST_BAG_ITEM.get(), CompostBagItem.DISPENSE_BEHAVIOR);
         MAX_BONEMEAL = getConfigMaxBonemeal();
-        //TODO: finish config and syncing
         ServerPlayConnectionEvents.JOIN.register(Event.DEFAULT_PHASE, (handler, sender, server) -> {
             var buffer = PacketByteBufs.create();
             buffer.writeInt(Services.PLATFORM.maxBonemeal().get());
