@@ -121,9 +121,9 @@ public class CompostBagItem extends Item {
 	}
 
 	private void compostAll(ItemStack bag, ItemStack slotItem, Player player) {
-		var shrinkBy = 0;
+		int shrinkBy = 0;
 		while (shrinkBy != slotItem.getCount() && !isBagFull(bag)) {
-			var result = simulateCompost(bag, slotItem, player);
+			InteractionResultHolder<ItemStack> result = simulateCompost(bag, slotItem, player);
 			if (result.getResult().consumesAction()) {
 				if (!result.getObject().isEmpty()) {
 					setLevel(bag, ComposterBlock.MIN_LEVEL);
@@ -134,8 +134,9 @@ public class CompostBagItem extends Item {
 				shrinkBy++;
 			}
 		}
-		if (shrinkBy > 0)
+		if (shrinkBy > 0) {
 			playReadySound(player);
+		}
 		playFillSound(player);
 		slotItem.shrink(shrinkBy);
 	}
@@ -181,10 +182,10 @@ public class CompostBagItem extends Item {
 	}
 
 	private InteractionResultHolder<ItemStack> simulateCompost(ItemStack bag, ItemStack item, Player player) {
-		var compostable = getCompostable(item);
+		float compostable = getCompostable(item);
 		if (compostable == 0)
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
-		var lvl = getLevel(bag);
+		int lvl = getLevel(bag);
 		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.level.getRandom().nextDouble() < compostable))
 			return InteractionResultHolder.consume(ItemStack.EMPTY);
 		if (lvl < MAX_LEVEL)
