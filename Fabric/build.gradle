@@ -33,15 +33,13 @@ loom {
 }
 
 processResources {
-    from project(":Common").sourceSets.main.resources
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+    from project(":Common").sourceSets.main.resources
 }
-
-sourceSets.main.resources.srcDir("$rootDir/Common/src/main/resources")
 
 idea {
     module {

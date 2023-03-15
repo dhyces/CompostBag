@@ -1,6 +1,8 @@
 {
     "pack": {
         "description": "compostbag resources",
-        "pack_format": 10
+        "pack_format": 13,
+        "forge:resource_pack_format": 13,
+        "forge:data_pack_format": 12
     }
 }
