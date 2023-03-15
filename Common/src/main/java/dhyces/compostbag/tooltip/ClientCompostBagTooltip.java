@@ -20,8 +20,8 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Constants.MOD_ID, "textures/gui/compost_bag_tooltip.png");
 
 	private final ItemStack bonemeal = Items.BONE_MEAL.getDefaultInstance();
-	private int level;
-	private int count;
+	private final int level;
+	private final int count;
 
 	public ClientCompostBagTooltip(CompostBagTooltip tooltip) {
 		this.level = tooltip.getLevel();
@@ -35,12 +35,11 @@ public class ClientCompostBagTooltip implements ClientTooltipComponent {
 
 	@Override
 	public int getWidth(Font font) {
-		var title = Component.translatable("item.compostbag.compost_bag");
-		var titleWidth = font.width(title);
-		var countTextWidth = font.width(countText());
-		var binWidth = 20;
-		var extended = countTextWidth + binWidth < titleWidth ? titleWidth : countTextWidth + binWidth;
-		return extended;
+		Component title = Component.translatable("item.compostbag.compost_bag");
+		int titleWidth = font.width(title);
+		int countTextWidth = font.width(countText());
+		int binWidth = 20;
+		return Math.max(countTextWidth + binWidth, titleWidth);
 	}
 
 	@Override

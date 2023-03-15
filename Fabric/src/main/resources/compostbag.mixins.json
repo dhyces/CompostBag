@@ -8,7 +8,6 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
-    "ClientTooltipComponentMixin",
     "ScreenMixin"
   ],
   "injectors": {

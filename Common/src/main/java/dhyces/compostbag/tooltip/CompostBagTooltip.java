@@ -4,8 +4,8 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 public class CompostBagTooltip implements TooltipComponent {
 
-	private int count;
-	private int level;
+	private final int count;
+	private final int level;
 
 	public CompostBagTooltip(int level, int count) {
 		this.level = level;

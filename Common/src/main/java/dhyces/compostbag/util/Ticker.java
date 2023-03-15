@@ -12,7 +12,7 @@ public class Ticker {
             this.rest = rest;
         }
 
-        /** Returns whether or not this tick should interact*/
+        /** Returns whether this tick should interact*/
         public boolean tick() {
             ticks++;
             if (ticks <= first) {

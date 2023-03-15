@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 
 public class Common {
 
-    public static final Supplier<Item> COMPOST_BAG_ITEM;
+    public static final Supplier<Item> COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(BuiltInRegistries.ITEM, "compost_bag", CompostBagItem::new);
 
     public static final Logger LOGGER = LogManager.getLogger(Constants.MOD_ID);
 
@@ -23,9 +23,5 @@ public class Common {
 
     public static ResourceLocation modLoc(String id) {
         return new ResourceLocation(Constants.MOD_ID, id);
-    }
-
-    static {
-        COMPOST_BAG_ITEM = Services.PLATFORM.registerItem(BuiltInRegistries.ITEM, "compost_bag", () -> new CompostBagItem());
     }
 }

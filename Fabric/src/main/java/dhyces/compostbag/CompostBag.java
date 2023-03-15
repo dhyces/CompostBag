@@ -12,6 +12,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -26,6 +27,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
 
 import java.util.concurrent.CompletableFuture;
@@ -52,6 +55,7 @@ public class CompostBag implements ModInitializer {
     @Override
     public void onInitialize() {
         Common.init();
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(new ItemStack(Common.COMPOST_BAG_ITEM.get())));
         DispenserBlock.registerBehavior(Common.COMPOST_BAG_ITEM.get(), CompostBagItem.DISPENSE_BEHAVIOR);
         MAX_BONEMEAL = getConfigMaxBonemeal();
         ServerPlayConnectionEvents.JOIN.register(Event.DEFAULT_PHASE, (handler, sender, server) -> {
