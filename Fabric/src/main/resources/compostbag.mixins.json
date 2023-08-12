@@ -8,7 +8,7 @@
   ],
   "client": [
     "AbstractContainerScreenMixin",
-    "ScreenMixin"
+    "GuiGraphicsMixin"
   ],
   "injectors": {
     "defaultRequire": 1

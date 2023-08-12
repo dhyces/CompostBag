@@ -98,7 +98,7 @@ public class CompostBagItem extends Item {
 		if (!slot.allowModification(player))
 			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (!player.level.isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
+			if (!player.level().isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
 				if (slot.hasItem()) {
 					var slotItem = slot.getItem();
 					if (isCompostable(slotItem)) {
@@ -147,7 +147,7 @@ public class CompostBagItem extends Item {
 		if (!slot.allowModification(player))
 			return false;
 		if (clickAction == ClickAction.SECONDARY) {
-			if (!player.level.isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
+			if (!player.level().isClientSide || player.containerMenu instanceof CreativeModeInventoryScreen.ItemPickerMenu) {
 				if (!otherItem.isEmpty()) {
 					var count = getBonemealCount(bag);
 					if (isCompostable(otherItem) && !isBagFull(bag)) {
@@ -186,7 +186,7 @@ public class CompostBagItem extends Item {
 		if (compostable == 0)
 			return InteractionResultHolder.fail(ItemStack.EMPTY);
 		int lvl = getLevel(bag);
-		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.level.getRandom().nextDouble() < compostable))
+		if ((lvl != 0 || !(compostable < 0.0F)) && !(player.level().getRandom().nextDouble() < compostable))
 			return InteractionResultHolder.consume(ItemStack.EMPTY);
 		if (lvl < MAX_LEVEL)
 			return InteractionResultHolder.success(ItemStack.EMPTY);
@@ -293,7 +293,7 @@ public class CompostBagItem extends Item {
 	}
 
 	private void playerSound(Player player, SoundEvent event, float volume) {
-		var randPitch = 0.8F + player.level.random.nextFloat() * 0.4F;
+		var randPitch = 0.8F + player.level().random.nextFloat() * 0.4F;
 		if (player instanceof ServerPlayer serverPlayer)
 			serverPlayer.playNotifySound(event, SoundSource.PLAYERS, volume, randPitch);
 		else

@@ -1,19 +1,10 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'maven-publish'
     id 'idea'
+    id 'maven-publish'
+    id 'fabric-loom'
 }
 
 archivesBaseName = "${mod_name}-Fabric-${minecraft_version}"
-
-dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation project(":Common")
-}
 
 loom {
     runs {
@@ -32,13 +23,14 @@ loom {
     }
 }
 
-processResources {
-    inputs.property "version", project.version
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings loom.officialMojangMappings()
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-    from project(":Common").sourceSets.main.resources
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation project(":Common")
 }
 
 idea {
@@ -47,8 +39,18 @@ idea {
     }
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     source(project(":Common").sourceSets.main.allSource)
+}
+tasks.withType(Javadoc).configureEach {
+    source(project(":Common").sourceSets.main.allJava)
+}
+tasks.named("sourcesJar", Jar) {
+    from(project(":Common").sourceSets.main.allSource)
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
 }
 
 jar {

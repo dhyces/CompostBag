@@ -5,7 +5,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dhyces.compostbag.CommonClient;
 import dhyces.compostbag.item.CompostBagItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -20,27 +25,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin {
+public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen {
 
     @Shadow protected int topPos;
 
     @Shadow protected int leftPos;
 
+    protected AbstractContainerScreenMixin(Component component) {
+        super(component);
+    }
+
     @Shadow protected abstract void slotClicked(Slot slot, int slotIndex, int mouseButton, ClickType clickType);
 
     @Shadow protected boolean isQuickCrafting;
 
+    @Shadow public abstract T getMenu();
+
     @Accessor(value = "hoveredSlot")
     public abstract Slot getHoveredSlot();
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", shift = At.Shift.AFTER))
-    public void compostbag_renderTooltipWhileHovering(PoseStack poseStack, int mouseX, int mouseY, float f, CallbackInfo ci) {
-        var screen = ((AbstractContainerScreen)(Object)this);
-
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V", shift = At.Shift.AFTER))
+    public void compostbag_renderTooltipWhileHovering(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         var bag = ItemStack.EMPTY;
 
         var hoveredSlot = getHoveredSlot();
-        var carried = screen.getMenu().getCarried();
+        var carried = getMenu().getCarried();
         if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof CompostBagItem && !carried.isEmpty()) {
             bag = hoveredSlot.getItem();
         }
@@ -52,14 +61,13 @@ public abstract class AbstractContainerScreenMixin {
 
         var x = mouseX-leftPos;
         var y = mouseY-topPos;
-        screen.renderTooltip(poseStack, screen.getTooltipFromItem(bag), bag.getTooltipImage(), x, y);
+        guiGraphics.renderTooltip(font, bag, x, y);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void compostbag_multiDrop(CallbackInfo ci) {
         var mc = Minecraft.getInstance();
         var clientPlayer = mc.player;
-        var screen = ((AbstractContainerScreen)(Object)this);
         if (clientPlayer == null)
             return;
         var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
@@ -67,10 +75,10 @@ public abstract class AbstractContainerScreenMixin {
             var slot = getHoveredSlot();
             // A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
             // See the implementation of canTakeItemForPickAll in the aforementioned menu class
-            if (slot != null && slot.hasItem() && screen.getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
+            if (slot != null && slot.hasItem() && getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
                 var item = slot.getItem();
-                var carried = screen.getMenu().getCarried();
-                if (carried == null || carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
+                var carried = getMenu().getCarried();
+                if (carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
                     return;
                 if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
                     slotClicked(slot, slot.index, mouseDown, ClickType.PICKUP);
