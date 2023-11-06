@@ -41,7 +41,7 @@ processResources {
     }
 }
 
-sourceSets.main.resources.srcDir("$rootDir/Common/src/main/resources")
+//sourceSets.main.resources.srcDir("$rootDir/Common/src/main/resources")
 
 idea {
     module {
