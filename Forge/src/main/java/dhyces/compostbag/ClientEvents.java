@@ -89,7 +89,7 @@ public class ClientEvents {
 		var mc = Minecraft.getInstance();
 		var clientPlayer = mc.player;
 		var s = mc.screen;
-		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || s == null || !(s instanceof AbstractContainerScreen<?>))
+		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || !(s instanceof AbstractContainerScreen<?>))
 			return;
 		var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
 		var screen = (AbstractContainerScreen<?>) s;
