@@ -54,8 +54,8 @@ public class CompostBagItem extends Item {
          }
       };
 
-	public CompostBagItem() {
-		super(new Item.Properties().stacksTo(1));
+	public CompostBagItem(Item.Properties properties) {
+		super(properties);
 	}
 
 	@Override
