@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
@@ -39,9 +40,9 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj) {
+    public Supplier<Item> registerItem(String id, Supplier<Item> obj) {
         var o = obj.get();
-        Registry.register(registry, new ResourceLocation(Constants.MOD_ID, id), o);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MOD_ID, id), o);
         return () -> o;
     }
 

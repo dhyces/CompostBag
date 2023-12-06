@@ -1,6 +1,7 @@
 package dev.dhyces.compostbag.platform;
 
 import dev.dhyces.compostbag.Config;
+import dev.dhyces.compostbag.ModRegistry;
 import dev.dhyces.compostbag.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -10,17 +11,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.function.Supplier;
 
-public class ForgePlatformHelper implements IPlatformHelper {
+public class NeoPlatformHelper implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
-        return "Forge";
+        return "Neo";
     }
 
     @Override
@@ -35,12 +35,12 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public boolean isSideClient() {
-        return FMLEnvironment.dist.isClient();
+        return FMLLoader.getDist().isClient();
     }
 
     @Override
-    public Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj) {
-        return dev.dhyces.compostbag.Registry.REGISTER.register(id, obj);
+    public Supplier<Item> registerItem(String id, Supplier<Item> obj) {
+        return ModRegistry.REGISTER.register(id, obj);
     }
 
 
@@ -56,6 +56,6 @@ public class ForgePlatformHelper implements IPlatformHelper {
 
     @Override
     public Supplier<Integer> maxBonemeal() {
-        return Config.SERVER.MAX_BONEMEAL::get;
+        return Config.SERVER.MAX_BONEMEAL;
     }
 }

@@ -35,7 +35,7 @@ public interface IPlatformHelper {
 
     boolean isSideClient();
 
-    Supplier<Item> registerItem(Registry<Item> registry, String id, Supplier<Item> obj);
+    Supplier<Item> registerItem(String id, Supplier<Item> obj);
 
     public ItemStack copyWithSize(ItemStack stack, int size);
 
