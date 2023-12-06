@@ -16,7 +16,7 @@ public class CompostBag {
     public CompostBag() {
         Common.init();
         var modBus = FMLJavaModLoadingContext.get().getModEventBus();
-        Registry.register(modBus);
+        ModRegistry.register(modBus);
 
         modBus.addListener(this::commonSetup);
 

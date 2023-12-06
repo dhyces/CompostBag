@@ -1,6 +1,7 @@
 package dev.dhyces.compostbag;
 
 import dev.dhyces.compostbag.item.CompostBagItem;
+import dev.dhyces.compostbag.networking.Networking;
 import dev.dhyces.compostbag.platform.Services;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.Event;
@@ -18,11 +19,18 @@ import net.minecraft.world.level.block.DispenserBlock;
 
 public class CompostBag implements ModInitializer {
 
+    public static final String CONFIG_DEFAULT_TEXT = """
+                #Server
+                #Max bonemeal in compost bag
+                #in range [0,INT_MAX)
+                max-bonemeal=128
+                """;
+
     public static SimpleConfig CONFIG = makeConfig();
     public static int MAX_BONEMEAL;
 
     static SimpleConfig makeConfig() {
-        return SimpleConfig.of(Constants.MOD_ID).provider(c -> "#Server\n#Max bonemeal in compost bag\n#in range [0,INT_MAX)\nmax-bonemeal=128\n").request();
+        return SimpleConfig.of(Constants.MOD_ID).provider(c -> CONFIG_DEFAULT_TEXT).request();
     }
 
     static int getConfigMaxBonemeal() {
@@ -37,21 +45,18 @@ public class CompostBag implements ModInitializer {
     @Override
     public void onInitialize() {
         Common.init();
+        Networking.init();
+
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(new ItemStack(Common.COMPOST_BAG_ITEM.get())));
         DispenserBlock.registerBehavior(Common.COMPOST_BAG_ITEM.get(), CompostBagItem.DISPENSE_BEHAVIOR);
+
         MAX_BONEMEAL = getConfigMaxBonemeal();
-        ServerPlayConnectionEvents.JOIN.register(Event.DEFAULT_PHASE, (handler, sender, server) -> {
-            var buffer = PacketByteBufs.create();
-            buffer.writeInt(Services.PLATFORM.maxBonemeal().get());
-            var packet = sender.createPacket(Common.modLoc("config_sync"), buffer);
-            sender.sendPacket(packet);
-        });
+
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
             public ResourceLocation getFabricId() {
                 return new ResourceLocation(Constants.MOD_ID, "config");
             }
-
 
             @Override
             public void onResourceManagerReload(ResourceManager resourceManager) {
@@ -61,6 +66,4 @@ public class CompostBag implements ModInitializer {
             }
         });
     }
-
-
 }

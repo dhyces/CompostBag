@@ -26,9 +26,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -51,11 +54,11 @@ public class SimpleConfig {
 
     public static class ConfigRequest {
 
-        private final File file;
+        private final Path file;
         private final String filename;
         private DefaultConfig provider;
 
-        private ConfigRequest(File file, String filename ) {
+        private ConfigRequest(Path file, String filename ) {
             this.file = file;
             this.filename = filename;
             this.provider = DefaultConfig::empty;
@@ -99,20 +102,19 @@ public class SimpleConfig {
      */
     public static ConfigRequest of( String filename ) {
         Path path = FabricLoader.getInstance().getConfigDir();
-        return new ConfigRequest( path.resolve( filename + ".properties" ).toFile(), filename );
+        return new ConfigRequest( path.resolve( filename + ".properties" ), filename );
     }
 
     private void createConfig() throws IOException {
 
         // try creating missing files
-        request.file.getParentFile().mkdirs();
-        Files.createFile( request.file.toPath() );
+        Files.createDirectories(request.file.getParent());
+        Files.createFile( request.file );
 
         // write default config data
-        PrintWriter writer = new PrintWriter(request.file, "UTF-8");
-        writer.write( request.getConfig() );
-        writer.close();
-
+        try (BufferedWriter writer = Files.newBufferedWriter(request.file, StandardCharsets.UTF_8)) {
+            writer.write(request.getConfig());
+        }
     }
 
     private void loadConfig() throws IOException {
@@ -137,7 +139,7 @@ public class SimpleConfig {
         this.request = request;
         String identifier = "Config '" + request.filename + "'";
 
-        if( !request.file.exists() ) {
+        if( !Files.exists(request.file) ) {
             LOGGER.info( identifier + " is missing, generating default one..." );
 
             try {
@@ -243,9 +245,9 @@ public class SimpleConfig {
      *
      * @return true if the operation was successful
      */
-    public boolean delete() {
+    public boolean delete() throws IOException {
         LOGGER.warn( "Config '" + request.filename + "' was removed from existence! Restart the game to regenerate it." );
-        return request.file.delete();
+        return Files.deleteIfExists(request.file);
     }
 
 }
