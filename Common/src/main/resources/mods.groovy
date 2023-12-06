@@ -1,9 +1,8 @@
 ModsDotGroovy.make {
     def modid = this.buildProperties["mod_id"]
-    def majorForgeVersion = (this.buildProperties["neo_version"] as String).split("\\.")[0]
 
     modLoader = "javafml"
-    loaderVersion = "[${majorForgeVersion},)"
+    loaderVersion = "${this.buildProperties["loader_version_range"]}"
 
     license = "MIT"
     issueTrackerUrl = "https://github.com/dhyces/CompostBag/issues"
