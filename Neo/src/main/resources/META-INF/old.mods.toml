@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT License"
+[[mods]]
+modId="compostbag"
+version="${file.jarVersion}"
+displayName="Compost Bag"
+issueTrackerURL="https://github.com/dhyces/CompostBag/issues"
+updateJSONURL="https://github.com/dhyces/CompostBag/raw/info/update.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/compost-bag"
+logoFile="icon.png"
+authors="dhyces"
+description='''
+Adds a bag that composts items like the composter and works like the bundle
+'''
+
+[[dependencies.compostbag]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.3,1.21)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.compostbag]]
+    modId="neo"
+    mandatory=true
+    versionRange="[20.3.2,)"
+    ordering="NONE"
+    side="BOTH"
