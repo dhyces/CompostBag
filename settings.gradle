@@ -17,6 +17,10 @@ pluginManagement {
             name = "Parchment"
             url = "https://maven.parchmentmc.org"
         }
+        maven {
+            name = 'Architectury'
+            url = "https://maven.architectury.dev/"
+        }
     }
 }
 

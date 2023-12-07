@@ -2,98 +2,89 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev'
+//    id 'net.neoforged.gradle.userdev'
+    id 'dev.architectury.loom'
 }
 
 base {
     archivesName = "${mod_name}-Neo-${minecraft_version}"
 }
 
-minecraft.accessTransformers.file project.file('src/main/resources/META-INF/accesstransformer.cfg')
+//minecraft.accessTransformers.file project.file('src/main/resources/META-INF/accesstransformer.cfg')
 
-runs {
-    configureEach {
-        workingDirectory project.file('run')
-//        ideaModule "${rootProject.name}.${project.name}.main"
-
-        systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
-        systemProperty 'mixin.env.remapRefMap', 'true'
-        systemProperty 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-
-        modSource project.sourceSets.main
+loom {
+    neoForge {
+        accessTransformer(project.file('src/main/resources/META-INF/accesstransformer.cfg'))
     }
-
-    client {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    server {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-        programArgument '--nogui'
-    }
-
-    gameTestServer {
-        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-    }
-
-    data {
-        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    runs {
+        client {
+            client()
+            setConfigName("Neo Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Neo Server")
+            ideConfigGenerated(true)
+            runDir("runServer")
+        }
     }
 }
+
+//runs {
+//    configureEach {
+//        workingDirectory project.file('run')
+////        ideaModule "${rootProject.name}.${project.name}.main"
 //
-//minecraft {
-//    mappings channel: "${mappings_id}", version: "${mappings_version}"
+//        systemProperty 'forge.logging.markers', 'REGISTRIES'
+//        systemProperty 'forge.logging.console.level', 'debug'
+//        systemProperty 'mixin.env.remapRefMap', 'true'
+//        systemProperty 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 //
-//    runs {
-//        client {
-//            workingDirectory project.file('run')
+//        modSource project.sourceSets.main
+//    }
 //
-//            taskName 'Client'
+//    client {
+//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+//    }
 //
-//            mods {
-//                modClientRun {
-//                    source sourceSets.main
-//                    source project(":Common").sourceSets.main
-//                }
-//            }
-//        }
+//    server {
+//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+//        programArgument '--nogui'
+//    }
 //
-//        server {
-//            workingDirectory project.file('run')
-//            ideaModule "${rootProject.name}.${project.name}.main"
-//            taskName 'Server'
-//            property 'mixin.env.remapRefMap', 'true'
-//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-//            mods {
-//                modServerRun {
-//                    source sourceSets.main
-//                    source project(":Common").sourceSets.main
-//                }
-//            }
-//        }
+//    gameTestServer {
+//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+//    }
 //
-//        data {
-//            workingDirectory project.file('run')
-//            ideaModule "${rootProject.name}.${project.name}.main"
-//            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-//            taskName 'Data'
-//            property 'mixin.env.remapRefMap', 'true'
-//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-//            mods {
-//                modDataRun {
-//                    source sourceSets.main
-//                    source project(":Common").sourceSets.main
-//                }
-//            }
-//        }
+//    data {
+//        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
 //    }
 //}
 
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
+//dependencies {
+//    implementation "net.neoforged:neoforge:${neo_version}"
+//
+//    compileOnly project(":Common")
+//}
+
+repositories {
+    maven {
+        name = 'Neo'
+        url = 'https://maven.neoforged.net/releases'
+    }
+}
+
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+    minecraft "com.mojang:minecraft:1.20.3"
+    neoForge "net.neoforged:neoforge:${neo_version}"
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-1.20.1:2023.08.20@zip")
+    }
 
     compileOnly project(":Common")
 }

@@ -16,8 +16,13 @@ ModsDotGroovy.make {
 
         displayUrl = "https://www.curseforge.com/minecraft/mc-mods/compost-bag"
         sourcesUrl = "https://github.com/dhyces/CompostBag"
+        issueTrackerUrl = "https://github.com/dhyces/CompostBag/issues"
         logoFile = "logo.png"
         description = "Adds a bag that composts items like the composter and works like the bundle"
+
+        onForge {
+            updateJsonUrl = "https://github.com/dhyces/CompostBag/raw/info/update.json"
+        }
 
         onFabric {
             entrypoints {
@@ -29,7 +34,7 @@ ModsDotGroovy.make {
         dependencies {
             onForge {
                 minecraft = "${this.buildProperties["minecraft_version_range"]}"
-                forge = "[${majorForgeVersion},)"
+                neoforge = "${this.buildProperties["neo_version_range"]}"
             }
 
             onFabric {
