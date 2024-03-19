@@ -1,3 +1,5 @@
+import modsdotgroovy.Dependency
+
 ModsDotGroovy.make {
     def modid = this.buildProperties["mod_id"]
 
@@ -42,6 +44,21 @@ ModsDotGroovy.make {
                 mod {
                     modId = 'fabric-api'
                     versionRange = '>=0.91.0'
+                }
+            }
+        }
+
+        onForge {
+            dependencies = dependencies.collect { dep ->
+                new Dependency() {
+                    @Override
+                    Map asForgeMap() {
+                        def map = dep.asForgeMap()
+                        def mand = map.get('mandatory')
+                        map.remove('mandatory')
+                        map.put('type', mand ? 'required' : 'optional')
+                        return map
+                    }
                 }
             }
         }

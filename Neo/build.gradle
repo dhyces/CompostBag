@@ -2,15 +2,12 @@ plugins {
     id 'java'
     id 'eclipse'
     id 'maven-publish'
-//    id 'net.neoforged.gradle.userdev'
     id 'dev.architectury.loom'
 }
 
 base {
     archivesName = "${mod_name}-Neo-${minecraft_version}"
 }
-
-//minecraft.accessTransformers.file project.file('src/main/resources/META-INF/accesstransformer.cfg')
 
 loom {
     neoForge {
@@ -32,44 +29,8 @@ loom {
     }
 }
 
-//runs {
-//    configureEach {
-//        workingDirectory project.file('run')
-////        ideaModule "${rootProject.name}.${project.name}.main"
-//
-//        systemProperty 'forge.logging.markers', 'REGISTRIES'
-//        systemProperty 'forge.logging.console.level', 'debug'
-//        systemProperty 'mixin.env.remapRefMap', 'true'
-//        systemProperty 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-//
-//        modSource project.sourceSets.main
-//    }
-//
-//    client {
-//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-//    }
-//
-//    server {
-//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-//        programArgument '--nogui'
-//    }
-//
-//    gameTestServer {
-//        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
-//    }
-//
-//    data {
-//        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
-//    }
-//}
 
 sourceSets.main.resources.srcDir 'src/generated/resources'
-
-//dependencies {
-//    implementation "net.neoforged:neoforge:${neo_version}"
-//
-//    compileOnly project(":Common")
-//}
 
 repositories {
     maven {
@@ -79,11 +40,11 @@ repositories {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:1.20.3"
+    minecraft "com.mojang:minecraft:${minecraft_version}"
     neoForge "net.neoforged:neoforge:${neo_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.1:2023.08.20@zip")
+        parchment("org.parchmentmc.data:parchment-1.20.2:2023.12.10@zip")
     }
 
     compileOnly project(":Common")
