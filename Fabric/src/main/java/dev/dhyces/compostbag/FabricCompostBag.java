@@ -7,13 +7,13 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.DispenserBlock;
 
-public class CompostBag implements ModInitializer {
+public class FabricCompostBag implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Common.init();
+        CompostBag.init();
 
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(new ItemStack(Common.COMPOST_BAG_ITEM.value())));
-        DispenserBlock.registerBehavior(Common.COMPOST_BAG_ITEM.value(), CompostBagItem.DISPENSE_BEHAVIOR);
+        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.TOOLS_AND_UTILITIES).register(entries -> entries.accept(new ItemStack(CompostBag.COMPOST_BAG_ITEM.value())));
+        DispenserBlock.registerBehavior(CompostBag.COMPOST_BAG_ITEM.value(), CompostBagItem.DISPENSE_BEHAVIOR);
     }
 }

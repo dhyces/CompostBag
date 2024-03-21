@@ -1,7 +1,7 @@
 package dev.dhyces.compostbag.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.dhyces.compostbag.CommonClient;
+import dev.dhyces.compostbag.CompostBagClient;
 import dev.dhyces.compostbag.item.CompostBagItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -78,7 +78,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 var carried = getMenu().getCarried();
                 if (carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
                     return;
-                if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
+                if (CompostBagClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
                     slotClicked(slot, slot.index, mouseDown, ClickType.PICKUP);
                 }
             }
@@ -89,11 +89,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     public void compostbag_cancelTickerClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         var mouseDown = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (button == InputConstants.MOUSE_BUTTON_RIGHT && mouseDown == GLFW.GLFW_RELEASE) {
-            if (CommonClient.getTickerInstance().inProgress()) {
+            if (CompostBagClient.getTickerInstance().inProgress()) {
                 isQuickCrafting = false;
                 cir.setReturnValue(true);
             }
-            CommonClient.getTickerInstance().restart();
+            CompostBagClient.getTickerInstance().restart();
         }
     }
 }

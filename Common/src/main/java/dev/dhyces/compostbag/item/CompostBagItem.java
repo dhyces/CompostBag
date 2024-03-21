@@ -1,6 +1,6 @@
 package dev.dhyces.compostbag.item;
 
-import dev.dhyces.compostbag.Common;
+import dev.dhyces.compostbag.CompostBag;
 import dev.dhyces.compostbag.platform.Services;
 import dev.dhyces.compostbag.tooltip.CompostBagTooltip;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -230,7 +230,7 @@ public class CompostBagItem extends Item {
 	}
 
 	public static int getMaxBonemeal(ItemStack stack) {
-		return stack.getOrDefault(Common.MAX_BONEMEAL_COUNT.value(), 0);
+		return stack.getOrDefault(CompostBag.MAX_BONEMEAL_COUNT.value(), 0);
 	}
 
 	private void growBonemealCount(ItemStack bag, int amount) {
@@ -239,18 +239,18 @@ public class CompostBagItem extends Item {
 
 	private static void setBonemealCount(ItemStack bag, int count) {
 		if (count == 0) {
-			bag.remove(Common.BONEMEAL_COUNT.value());
+			bag.remove(CompostBag.BONEMEAL_COUNT.value());
 			return;
 		}
-		bag.set(Common.BONEMEAL_COUNT.value(), count);
+		bag.set(CompostBag.BONEMEAL_COUNT.value(), count);
 	}
 
 	public static int getBonemealCount(ItemStack stack) {
-		return stack.getOrDefault(Common.BONEMEAL_COUNT.value(), 0);
+		return stack.getOrDefault(CompostBag.BONEMEAL_COUNT.value(), 0);
 	}
 
 	public static int getMaxLevel(ItemStack stack) {
-		return stack.getOrDefault(Common.MAX_COMPOST_LEVEL.value(), 0);
+		return stack.getOrDefault(CompostBag.MAX_COMPOST_LEVEL.value(), 0);
 	}
 
 	private void growLevel(ItemStack stack, int amount) {
@@ -259,14 +259,14 @@ public class CompostBagItem extends Item {
 
 	private void setLevel(ItemStack stack, int lvl) {
 		if (lvl == 0) {
-			stack.remove(Common.COMPOST_LEVEL.value());
+			stack.remove(CompostBag.COMPOST_LEVEL.value());
 			return;
 		}
-		stack.set(Common.COMPOST_LEVEL.value(), lvl);
+		stack.set(CompostBag.COMPOST_LEVEL.value(), lvl);
 	}
 
 	private int getLevel(ItemStack stack) {
-		return stack.getOrDefault(Common.COMPOST_LEVEL.value(), 0);
+		return stack.getOrDefault(CompostBag.COMPOST_LEVEL.value(), 0);
 	}
 
 	private void playBonemealSound(Level level, BlockPos pos) {

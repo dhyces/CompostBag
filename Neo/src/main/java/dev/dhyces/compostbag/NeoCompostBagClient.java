@@ -26,21 +26,21 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class ClientEvents {
+public class NeoCompostBagClient {
 
 	static void init(IEventBus modBus) {
-		modBus.addListener(ClientEvents::clientSetup);
-		modBus.addListener(ClientEvents::registerTooltipComponents);
+		modBus.addListener(NeoCompostBagClient::clientSetup);
+		modBus.addListener(NeoCompostBagClient::registerTooltipComponents);
 
-		NeoForge.EVENT_BUS.addListener(ClientEvents::cancelOtherTooltips);
-		NeoForge.EVENT_BUS.addListener(ClientEvents::renderTooltipWhileHovering);
-		NeoForge.EVENT_BUS.addListener(ClientEvents::multiDrop);
-		NeoForge.EVENT_BUS.addListener(ClientEvents::cancelRightClickTick);
+		NeoForge.EVENT_BUS.addListener(NeoCompostBagClient::cancelOtherTooltips);
+		NeoForge.EVENT_BUS.addListener(NeoCompostBagClient::renderTooltipWhileHovering);
+		NeoForge.EVENT_BUS.addListener(NeoCompostBagClient::multiDrop);
+		NeoForge.EVENT_BUS.addListener(NeoCompostBagClient::cancelRightClickTick);
 	}
 
 	private static void clientSetup(final FMLClientSetupEvent event) {
 		event.enqueueWork(() ->
-			ItemProperties.register(Common.COMPOST_BAG_ITEM.value(), Common.id("filled"), (ClampedItemPropertyFunction)CommonClient::bonemealFullness)
+			ItemProperties.register(CompostBag.COMPOST_BAG_ITEM.value(), CompostBag.id("filled"), (ClampedItemPropertyFunction) CompostBagClient::bonemealFullness)
 		);
 	}
 
@@ -104,7 +104,7 @@ public class ClientEvents {
 				return;
 			}
 
-			if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
+			if (CompostBagClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
 				if (screen instanceof CreativeModeInventoryScreen) {
 					screen.getMenu().clicked(slot.index == 0 ? slot.getContainerSlot() : slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				} else {
@@ -117,11 +117,11 @@ public class ClientEvents {
 	private static void cancelRightClickTick(final ScreenEvent.MouseButtonReleased.Pre event) {
 		var screen = Minecraft.getInstance().screen;
 		if (event.getButton() == InputConstants.MOUSE_BUTTON_RIGHT && screen instanceof AbstractContainerScreen<?> containerScreen) {
-			if (CommonClient.getTickerInstance().inProgress()) {
+			if (CompostBagClient.getTickerInstance().inProgress()) {
 				containerScreen.isQuickCrafting = false;
 				event.setCanceled(true);
 			}
-			CommonClient.getTickerInstance().restart();
+			CompostBagClient.getTickerInstance().restart();
 		}
 	}
 }

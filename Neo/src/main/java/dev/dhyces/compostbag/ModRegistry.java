@@ -2,8 +2,6 @@ package dev.dhyces.compostbag;
 
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -14,7 +12,7 @@ public class ModRegistry {
 
 	@SuppressWarnings("unchecked")
 	public static <T> DeferredRegister<T> getOrCreateDeferredRegistry(Registry<T> registry) {
-		return (DeferredRegister<T>) REGISTRIES.computeIfAbsent(registry, objects -> DeferredRegister.create(registry, Common.MODID));
+		return (DeferredRegister<T>) REGISTRIES.computeIfAbsent(registry, objects -> DeferredRegister.create(registry, CompostBag.MODID));
 	}
 
 	public static void register(IEventBus bus) {

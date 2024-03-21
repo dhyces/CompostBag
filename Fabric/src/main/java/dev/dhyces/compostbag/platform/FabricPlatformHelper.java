@@ -1,15 +1,12 @@
 package dev.dhyces.compostbag.platform;
 
-import dev.dhyces.compostbag.Common;
 import dev.dhyces.compostbag.CompostBag;
-import dev.dhyces.compostbag.Constants;
 import dev.dhyces.compostbag.platform.services.IPlatformHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +44,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public <T> Holder<T> register(Registry<T> registry, String id, Supplier<T> obj) {
-        return Registry.registerForHolder(registry, Common.id(id), obj.get());
+        return Registry.registerForHolder(registry, CompostBag.id(id), obj.get());
     }
 
     @Override

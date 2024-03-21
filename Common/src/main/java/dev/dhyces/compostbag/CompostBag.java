@@ -1,6 +1,5 @@
 package dev.dhyces.compostbag;
 
-import com.mojang.serialization.Codec;
 import dev.dhyces.compostbag.item.CompostBagItem;
 import dev.dhyces.compostbag.platform.Services;
 import net.minecraft.core.Holder;
@@ -15,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.function.UnaryOperator;
 
-public class Common {
+public class CompostBag {
     public static final String MODID = "compostbag";
     public static ResourceLocation id(String id) {
         return new ResourceLocation(MODID, id);
