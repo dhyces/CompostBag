@@ -1,19 +1,7 @@
 plugins {
-    id 'org.groovymc.modsdotgroovy' version '1.4.3'
-//    id 'fabric-loom' version '1.5-SNAPSHOT' apply(false)
-//    id 'net.neoforged.gradle.userdev' version '7.0.58' apply(false)
+    id 'org.groovymc.modsdotgroovy' version '2.0.0-beta.16' apply(false)
     id "dev.architectury.loom" version "1.5.389" apply(false)
     id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT' apply(false)
-}
-
-modsDotGroovy {
-    dslVersion = '1.5.1'
-    platform = 'multiloader'
-    multiloader {
-        common = project(':Common')
-        forge = [project(':Neo')]
-        fabric = [project(':Fabric')]
-    }
 }
 
 subprojects {
@@ -62,9 +50,7 @@ subprojects {
     }
 
     processResources {
-        filesMatching(['pack.mcmeta', 'fabric.mod.json', 'mods.toml', '*.mixins.json']) {
-            expand project.properties
-        }
+        exclude("mods.groovy")
     }
 
     // Disables Gradle's custom module metadata from being published to maven. The

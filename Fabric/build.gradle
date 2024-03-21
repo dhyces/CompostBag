@@ -1,11 +1,15 @@
+import org.groovymc.modsdotgroovy.gradle.tasks.AbstractGatherPlatformDetailsTask
+
 plugins {
     id 'idea'
     id 'maven-publish'
-//    id 'fabric-loom'
+    id 'org.groovymc.modsdotgroovy'
     id 'dev.architectury.loom'
 }
 
-archivesBaseName = "${mod_name}-Fabric-${minecraft_version}"
+base {
+    archivesName = "${mod_name}-Fabric-${minecraft_version}"
+}
 
 loom {
     runs {
@@ -82,4 +86,8 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
+}
+
+modsDotGroovy.multiplatform {
+    from ':Common'
 }

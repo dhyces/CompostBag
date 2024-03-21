@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'org.groovymc.modsdotgroovy'
     id 'org.spongepowered.gradle.vanilla'
 }
 
@@ -41,3 +42,5 @@ publishing {
         }
     }
 }
+
+modsDotGroovy.multiplatform.expose()
