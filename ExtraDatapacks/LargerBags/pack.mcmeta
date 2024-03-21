@@ -1,0 +1,6 @@
+{
+    "pack": {
+        "description": "Replaces the recipe for a compost bag to have a doubled max bonemeal stack size",
+        "pack_format": 13
+    }
+}

@@ -1,18 +1,17 @@
 package dev.dhyces.compostbag.platform;
 
-import dev.dhyces.compostbag.Config;
 import dev.dhyces.compostbag.ModRegistry;
 import dev.dhyces.compostbag.platform.services.IPlatformHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import java.util.function.Supplier;
 
@@ -39,23 +38,17 @@ public class NeoPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Supplier<Item> registerItem(String id, Supplier<Item> obj) {
-        return ModRegistry.REGISTER.register(id, obj);
+    public float getCompostChance(ItemStack stack) {
+        return ComposterBlock.getValue(stack);
     }
 
-
     @Override
-    public ItemStack copyWithSize(ItemStack stack, int size) {
-        return ItemHandlerHelper.copyStackWithSize(stack, size);
+    public <T> Holder<T> register(Registry<T> registry, String id, Supplier<T> obj) {
+        return ModRegistry.getOrCreateDeferredRegistry(registry).register(id, obj);
     }
 
     @Override
     public boolean bonemeal(ItemStack stack, Level level, BlockPos blockPos, Player player) {
         return BoneMealItem.applyBonemeal(stack, level, blockPos, player);
-    }
-
-    @Override
-    public Supplier<Integer> maxBonemeal() {
-        return Config.SERVER.MAX_BONEMEAL;
     }
 }

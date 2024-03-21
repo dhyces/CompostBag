@@ -17,6 +17,9 @@
 	}
   },
   "result": {
-    "id": "compostbag:compost_bag"
+    "id": "compostbag:compost_bag",
+    "components": {
+      "compostbag:max_bonemeal_count": 256
+    }
   }
 }

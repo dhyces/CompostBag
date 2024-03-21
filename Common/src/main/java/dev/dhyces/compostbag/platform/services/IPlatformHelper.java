@@ -1,7 +1,9 @@
 package dev.dhyces.compostbag.platform.services;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,11 +37,13 @@ public interface IPlatformHelper {
 
     boolean isSideClient();
 
-    Supplier<Item> registerItem(String id, Supplier<Item> obj);
+    float getCompostChance(ItemStack stack);
 
-    public ItemStack copyWithSize(ItemStack stack, int size);
+    default Holder<Item> registerItem(String id, Supplier<Item> obj) {
+        return register(BuiltInRegistries.ITEM, id, obj);
+    }
 
-    public boolean bonemeal(ItemStack stack, Level level, BlockPos blockPos, Player player);
+    <T> Holder<T> register(Registry<T> registry, String id, Supplier<T> obj);
 
-    public Supplier<Integer> maxBonemeal();
+    boolean bonemeal(ItemStack stack, Level level, BlockPos blockPos, Player player);
 }

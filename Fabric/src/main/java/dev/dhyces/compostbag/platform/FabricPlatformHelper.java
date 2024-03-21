@@ -1,19 +1,20 @@
 package dev.dhyces.compostbag.platform;
 
+import dev.dhyces.compostbag.Common;
 import dev.dhyces.compostbag.CompostBag;
 import dev.dhyces.compostbag.Constants;
 import dev.dhyces.compostbag.platform.services.IPlatformHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.ComposterBlock;
 
 import java.util.function.Supplier;
 
@@ -40,26 +41,17 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
-    public Supplier<Item> registerItem(String id, Supplier<Item> obj) {
-        var o = obj.get();
-        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(Constants.MOD_ID, id), o);
-        return () -> o;
+    public float getCompostChance(ItemStack stack) {
+        return ComposterBlock.COMPOSTABLES.getFloat(stack);
     }
 
     @Override
-    public ItemStack copyWithSize(ItemStack stack, int size) {
-        var copy = stack.copy();
-        copy.setCount(size);
-        return copy;
+    public <T> Holder<T> register(Registry<T> registry, String id, Supplier<T> obj) {
+        return Registry.registerForHolder(registry, Common.id(id), obj.get());
     }
 
     @Override
     public boolean bonemeal(ItemStack stack, Level level, BlockPos blockPos, Player player) {
         return BoneMealItem.growCrop(stack, level, blockPos);
     }
-
-    @Override
-    public Supplier<Integer> maxBonemeal() {
-            return () -> CompostBag.MAX_BONEMEAL;
-        }
 }

@@ -10,10 +10,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.neoforged.bus.api.IEventBus;
@@ -22,33 +22,26 @@ import net.neoforged.neoforge.client.event.ContainerScreenEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientEvents {
 
-	static void init(IEventBus modBus, IEventBus forgeBus) {
+	static void init(IEventBus modBus) {
 		modBus.addListener(ClientEvents::clientSetup);
-		modBus.addListener(ClientEvents::onAddToTabs);
 		modBus.addListener(ClientEvents::registerTooltipComponents);
 
-		forgeBus.addListener(ClientEvents::cancelOtherTooltips);
-		forgeBus.addListener(ClientEvents::renderTooltipWhileHovering);
-		forgeBus.addListener(ClientEvents::multiDrop);
-		forgeBus.addListener(ClientEvents::cancelRightClickTick);
+		NeoForge.EVENT_BUS.addListener(ClientEvents::cancelOtherTooltips);
+		NeoForge.EVENT_BUS.addListener(ClientEvents::renderTooltipWhileHovering);
+		NeoForge.EVENT_BUS.addListener(ClientEvents::multiDrop);
+		NeoForge.EVENT_BUS.addListener(ClientEvents::cancelRightClickTick);
 	}
 
 	private static void clientSetup(final FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			ItemProperties.register(Common.COMPOST_BAG_ITEM.get(), Common.modLoc("filled"), CompostBagItem::getFullnessDisplay);
-		});
-	}
-
-	private static void onAddToTabs(BuildCreativeModeTabContentsEvent event) {
-		if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-			event.accept(Common.COMPOST_BAG_ITEM.get());
-		}
+		event.enqueueWork(() ->
+			ItemProperties.register(Common.COMPOST_BAG_ITEM.value(), Common.id("filled"), (ClampedItemPropertyFunction)CommonClient::bonemealFullness)
+		);
 	}
 
 	private static void registerTooltipComponents(RegisterClientTooltipComponentFactoriesEvent event) {
@@ -72,12 +65,14 @@ public class ClientEvents {
 		ItemStack carried = screen.getMenu().getCarried();
 		if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof CompostBagItem && !carried.isEmpty()) {
 			bag = hoveredSlot.getItem();
-		}
-		else if (carried.getItem() instanceof CompostBagItem)
+		} else if (carried.getItem() instanceof CompostBagItem) {
 			bag = carried;
+		}
 
-		if (bag.isEmpty())
+		if (bag.isEmpty()) {
 			return;
+		}
+
 
 		Minecraft mc = Minecraft.getInstance();
 		GuiGraphics guiGraphics = e.getGuiGraphics();
@@ -91,23 +86,29 @@ public class ClientEvents {
 		Minecraft mc = Minecraft.getInstance();
 		AbstractClientPlayer clientPlayer = mc.player;
 		Screen s = mc.screen;
-		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || !(s instanceof AbstractContainerScreen<?> screen))
+		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || !(s instanceof AbstractContainerScreen<?> screen)) {
 			return;
-		int mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
-		if (mouseDown == GLFW.GLFW_PRESS) {
-			Slot slot = screen.getSlotUnderMouse();
-			// A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
-			// See the implementation of canTakeItemForPickAll in the aforementioned menu class
-			if (slot != null && slot.hasItem() && screen.getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
-				ItemStack item = slot.getItem();
-				ItemStack carried = screen.getMenu().getCarried();
-				if (carried.isEmpty() || !ComposterBlock.COMPOSTABLES.containsKey(carried.getItem()))
-					return;
-				if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
-					if (screen instanceof CreativeModeInventoryScreen)
-						screen.getMenu().clicked(slot.index == 0 ? slot.getContainerSlot() : slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
-					else
-						mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
+		}
+
+		if (GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT) != GLFW.GLFW_PRESS) {
+			return;
+		}
+
+		Slot slot = screen.getSlotUnderMouse();
+		// A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
+		// See the implementation of canTakeItemForPickAll in the aforementioned menu class
+		if (slot != null && slot.hasItem() && screen.getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
+			ItemStack item = slot.getItem();
+			ItemStack carried = screen.getMenu().getCarried();
+			if (carried.isEmpty() || ComposterBlock.getValue(carried) == 0) {
+				return;
+			}
+
+			if (CommonClient.getTickerInstance().tick() && item.getItem() instanceof CompostBagItem) {
+				if (screen instanceof CreativeModeInventoryScreen) {
+					screen.getMenu().clicked(slot.index == 0 ? slot.getContainerSlot() : slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
+				} else {
+					mc.gameMode.handleInventoryMouseClick(screen.getMenu().containerId, slot.index, InputConstants.MOUSE_BUTTON_RIGHT, ClickType.PICKUP, clientPlayer);
 				}
 			}
 		}

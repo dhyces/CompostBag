@@ -33,8 +33,8 @@ ModsDotGroovy.make {
         }
 
         dependencies {
-            onForge {
-                minecraft = "${this.buildProperties["minecraft_version_range"]}"
+            onForge { // TODO: add this back
+//                minecraft = "${this.buildProperties["minecraft_version_range"]}"
                 neoforge = "${this.buildProperties["neo_version_range"]}"
             }
 

@@ -1,4 +1,5 @@
 plugins {
+    id 'idea'
     id 'java'
     id 'eclipse'
     id 'maven-publish'
@@ -29,10 +30,10 @@ loom {
     }
 }
 
-
 sourceSets.main.resources.srcDir 'src/generated/resources'
 
 repositories {
+    mavenLocal()
     maven {
         name = 'Neo'
         url = 'https://maven.neoforged.net/releases'
