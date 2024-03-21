@@ -1,8 +1,6 @@
 package dev.dhyces.compostbag.tooltip;
 
-import dev.dhyces.compostbag.Common;
-import dev.dhyces.compostbag.Constants;
-import dev.dhyces.compostbag.item.CompostBagItem;
+import dev.dhyces.compostbag.CompostBag;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -14,7 +12,7 @@ import net.minecraft.world.item.Items;
 import org.joml.Matrix4f;
 
 public record ClientCompostBagTooltip(int maxCount, int count, int maxLevel, int level) implements ClientTooltipComponent {
-	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(Common.MODID, "textures/gui/compost_bag_tooltip.png");
+	public static final ResourceLocation TEXTURE_LOCATION = CompostBag.id("textures/gui/compost_bag_tooltip.png");
 	private static final ItemStack BONEMEAL = Items.BONE_MEAL.getDefaultInstance();
 
 	public ClientCompostBagTooltip(CompostBagTooltip tooltip) {
@@ -58,7 +56,7 @@ public record ClientCompostBagTooltip(int maxCount, int count, int maxLevel, int
 	}
 
 	private void blitFill(GuiGraphics guiGraphics, int x, int y) {
-	    int renderLevel = level*2;
+	    int renderLevel = (int)Math.ceil(((double) level/maxLevel)*16d);
 		guiGraphics.blit(TEXTURE_LOCATION, x, y+16-renderLevel, 0, 32-renderLevel, 16, renderLevel, 32, 32);
 	}
 

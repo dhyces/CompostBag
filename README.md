@@ -4,12 +4,13 @@
 # Update to 1.20.5
 On updating to 1.20.5, all of the NBT data that compost bags originally had will be stored as a `custom_data` component.
 This data is no longer used by Compost Bag in favor of new data components `compostbag:max_bonemeal_count`,
-`compostbag:bonemeal_count`, and `compostbag:compost_level`. To fix old bags, the world must be opened with an NBT
+`compostbag:bonemeal_count`, `compostbag:max_compost_level`, and `compostbag:compost_level`. To fix old bags, the world must be opened with an NBT
 editor and manually converted to use the new components. Unfortunately, there is no way to perform these conversions of 
 data in the mod. Another change to note, configs no longer exist in favor of the `compostbag:max_bonemeal_count`
 component. On the GitHub page for the mod, there is a folder `ExtraDatapacks` which contains a default datapack to
 double the max size. Simply copy this datapack and change the max bonemeal count to your desired amount and enable the 
-datapack. This also allows creators to add more recipes for custom compost bags of varying capacity, if they so desire.
+datapack. This also allows creators to add more recipes for custom compost bags of varying capacity and varying fill
+levels, if they so desire.
 
 ---
 
