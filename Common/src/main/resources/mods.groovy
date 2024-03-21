@@ -22,7 +22,7 @@ ModsDotGroovy.make {
         authors = [this.buildProperties["mod_author"] as String]
 
         displayUrl = "https://www.curseforge.com/minecraft/mc-mods/compost-bag"
-        logoFile = "logo.png"
+        logoFile = "assets/compostbag/logo.png"
         description = "Adds a bag that composts items like the composter and works like the bundle"
 
         onFabric {
