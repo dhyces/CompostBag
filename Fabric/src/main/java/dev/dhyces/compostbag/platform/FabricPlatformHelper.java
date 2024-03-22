@@ -39,7 +39,7 @@ public class FabricPlatformHelper implements IPlatformHelper {
 
     @Override
     public float getCompostChance(ItemStack stack) {
-        return ComposterBlock.COMPOSTABLES.getFloat(stack);
+        return ComposterBlock.COMPOSTABLES.getFloat(stack.getItem());
     }
 
     @Override
