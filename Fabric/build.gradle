@@ -1,3 +1,5 @@
+import org.groovymc.modsdotgroovy.gradle.tasks.AbstractGatherPlatformDetailsTask
+
 plugins {
     id 'idea'
     id 'maven-publish'
@@ -81,6 +83,7 @@ publishing {
 }
 
 modsDotGroovy {
+    platform = org.groovymc.modsdotgroovy.core.Platform.FABRIC
     multiplatform {
         from ':Common'
     }
