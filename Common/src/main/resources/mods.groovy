@@ -11,8 +11,10 @@ MultiplatformModsDotGroovy.make {
     mod {
         modId = modid
         displayName = buildProperties["mod_name"]
-        version = buildProperties["version"]
-        authors = [buildProperties["mod_author"] as String]
+        version = environmentInfo.version
+        authors {
+            author = buildProperties["mod_author"]
+        }
 
         displayUrl = "https://www.curseforge.com/minecraft/mc-mods/compost-bag"
         logoFile = "assets/compostbag/logo.png"
@@ -43,7 +45,7 @@ MultiplatformModsDotGroovy.make {
     }
 
     onFabric {
-        environment = "*"
+        environment = Environment.ANY
         mixins {
             mixin("${modid}.mixins.json")
         }
