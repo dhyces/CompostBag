@@ -39,14 +39,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
     @Shadow public abstract T getMenu();
 
-    @Accessor(value = "hoveredSlot")
-    public abstract Slot getHoveredSlot();
+    @Shadow
+    protected Slot hoveredSlot;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V", shift = At.Shift.AFTER))
     public void compostbag_renderTooltipWhileHovering(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         var bag = ItemStack.EMPTY;
 
-        var hoveredSlot = getHoveredSlot();
+        var hoveredSlot = this.hoveredSlot;
         var carried = getMenu().getCarried();
         if (hoveredSlot != null && hoveredSlot.getItem().getItem() instanceof CompostBagItem && !carried.isEmpty()) {
             bag = hoveredSlot.getItem();
@@ -70,7 +70,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         var mouseDown = GLFW.glfwGetMouseButton(mc.getWindow().getWindow(), InputConstants.MOUSE_BUTTON_RIGHT);
         if (mouseDown == GLFW.GLFW_PRESS) {
-            var slot = getHoveredSlot();
+            var slot = this.hoveredSlot;
             // A note for the last check, this ensures that this doesn't continue in the case that the menu is a CreativeModeInventoryScreen#ItemPickerMenu.
             // See the implementation of canTakeItemForPickAll in the aforementioned menu class
             if (slot != null && slot.hasItem() && getMenu().canTakeItemForPickAll(slot.getItem(), slot)) {
