@@ -1,5 +1,3 @@
-import org.groovymc.modsdotgroovy.gradle.tasks.AbstractGatherPlatformDetailsTask
-
 plugins {
     id 'idea'
     id 'maven-publish'
@@ -36,12 +34,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     implementation project(":Common")
-}
-
-idea {
-    module {
-        inheritOutputDirs = false
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -88,6 +80,8 @@ publishing {
     }
 }
 
-modsDotGroovy.multiplatform {
-    from ':Common'
+modsDotGroovy {
+    multiplatform {
+        from ':Common'
+    }
 }
