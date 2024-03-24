@@ -15,6 +15,6 @@ public class CompostBagClient {
     }
 
     public static float bonemealFullness(ItemStack stack, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
-        return CompostBagItem.getBonemealCount(stack) / (float)stack.getOrDefault(CompostBag.MAX_BONEMEAL_COUNT.value(), 1);
+        return CompostBagItem.getBonemeal(stack) / (float)stack.getOrDefault(CompostBag.MAX_BONEMEAL_COUNT.value(), 1);
     }
 }
