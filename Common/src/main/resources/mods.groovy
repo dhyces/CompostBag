@@ -26,7 +26,7 @@ MultiplatformModsDotGroovy.make {
         }
 
         dependencies {
-            minecraft = "${buildProperties["minecraft_version_range"]}"
+//            minecraft = "${buildProperties["minecraft_version_range"]}"
             onNeoForge {
                 mod("neoforge") {
                     versionRange = "${buildProperties["neo_version_range"]}"

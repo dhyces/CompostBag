@@ -84,7 +84,14 @@ publishing {
 
 modsDotGroovy {
     platform = org.groovymc.modsdotgroovy.core.Platform.FABRIC
+    inferGather.set false
     multiplatform {
         from ':Common'
     }
+    apply()
+}
+
+tasks.named('gatherFabricPlatformDetails', AbstractGatherPlatformDetailsTask).configure {
+    minecraftVersion = '24w13a'
+    platformVersion = '1.15.7'
 }
