@@ -41,6 +41,14 @@ repositories {
         name = 'Neo'
         url = 'https://maven.neoforged.net/releases'
     }
+    maven {
+        name 'Maven for PR #794' // https://github.com/neoforged/NeoForge/pull/794
+        url 'https://prmaven.neoforged.net/NeoForge/pr794'
+        content {
+            includeModule('net.neoforged', 'testframework')
+            includeModule('net.neoforged', 'neoforge')
+        }
+    }
 }
 
 dependencies {
@@ -48,7 +56,7 @@ dependencies {
     neoForge "net.neoforged:neoforge:${neo_version}"
     mappings loom.layered() {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-1.20.2:2023.12.10@zip")
+        parchment("org.parchmentmc.data:parchment-1.20.4:2024.02.25@zip")
     }
 
     compileOnly project(":Common")
@@ -66,7 +74,9 @@ tasks.named("sourcesJar", Jar) {
 
 processResources {
     from project(":Common").sourceSets.main.resources
-    rename "mods.toml", "neoforge.mods.toml"
+    filesMatching("neoforge.mods.toml") {
+        copySpec()
+    }
 }
 
 publishing {
@@ -88,6 +98,10 @@ publishing {
 modsDotGroovy {
     platform = org.groovymc.modsdotgroovy.core.Platform.NEOFORGE
     inferGather.set false
+    gather {
+        projectProperty("loader_version_range")
+        projectProperty("neo_version_range")
+    }
     multiplatform {
         from ':Common'
     }
@@ -97,7 +111,4 @@ modsDotGroovy {
 tasks.named('gatherNeoForgePlatformDetails', AbstractGatherPlatformDetailsTask).configure {
     minecraftVersion = '24w13a'
     platformVersion = '20.5.0-alpha.24w13a.20240328.230204'
-//    buildProperties.put("mod_id", mod_id)
-//    buildProperties.put("loader_version_range", loader_version_range)
-//    buildProperties.put("neo_version_range", neo_version_range)
 }

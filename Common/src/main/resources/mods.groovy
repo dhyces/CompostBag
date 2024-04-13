@@ -12,9 +12,7 @@ MultiplatformModsDotGroovy.make {
         modId = modid
         displayName = buildProperties["mod_name"]
         version = environmentInfo.version
-        authors {
-            author = buildProperties["mod_author"]
-        }
+        author = buildProperties["mod_author"]
 
         displayUrl = "https://www.curseforge.com/minecraft/mc-mods/compost-bag"
         logoFile = "assets/compostbag/logo.png"
