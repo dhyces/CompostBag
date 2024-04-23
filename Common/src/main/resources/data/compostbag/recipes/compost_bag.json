@@ -9,12 +9,12 @@
     "S": {
         "tag": "c:strings"
     },
-	"L": {
-		"tag": "c:leather"
-	},
-	"C": {
-		"item": "minecraft:composter"
-	}
+    "L": {
+      "tag": "c:leather"
+    },
+    "C": {
+      "item": "minecraft:composter"
+    }
   },
   "result": {
     "id": "compostbag:compost_bag"
