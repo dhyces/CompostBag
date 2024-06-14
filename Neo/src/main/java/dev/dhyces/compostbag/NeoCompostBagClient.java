@@ -18,12 +18,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ContainerScreenEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.TickEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class NeoCompostBagClient {
@@ -82,11 +82,11 @@ public class NeoCompostBagClient {
 	}
 
 
-	private static void multiDrop(final TickEvent.ClientTickEvent event) {
+	private static void multiDrop(final ClientTickEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		AbstractClientPlayer clientPlayer = mc.player;
 		Screen s = mc.screen;
-		if (event.phase.equals(TickEvent.Phase.END) || clientPlayer == null || !(s instanceof AbstractContainerScreen<?> screen)) {
+		if (clientPlayer == null || !(s instanceof AbstractContainerScreen<?> screen)) {
 			return;
 		}
 

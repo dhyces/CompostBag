@@ -17,7 +17,7 @@ import java.util.function.UnaryOperator;
 public class CompostBag {
     public static final String MODID = "compostbag";
     public static ResourceLocation id(String id) {
-        return new ResourceLocation(MODID, id);
+        return ResourceLocation.fromNamespaceAndPath(MODID, id);
     }
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 

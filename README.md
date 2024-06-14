@@ -1,8 +1,8 @@
-![Compost Bag](https://github.com/dhyces/CompostBag/raw/info/marketing/compost_bag.png "Compost Bag")
-![Requires Forge](https://img.shields.io/static/v1?style=for-the-badge&label=Loader&message=Forge&color=a8320c "Requires Forge")![1.18.X, 1.19.X, 1.20.X](https://img.shields.io/static/v1?style=for-the-badge&label=Versions&message=1.18.x&color=a8320c "1.18.X, 1.19.X, 1.20.X")
+![Compost Bag]
+![Requires Forge]![Versions]
 
-# Update to 1.20.5
-On updating to 1.20.5, all of the NBT data that compost bags originally had will be stored as a `custom_data` component.
+# Updating to 1.20.5
+On updating to 1.20.5, all the NBT data that compost bags originally had in old worlds will be stored as a `custom_data` component.
 This data is no longer used by Compost Bag in favor of new data components `compostbag:max_bonemeal_count`,
 `compostbag:bonemeal_count`, `compostbag:max_compost_level`, and `compostbag:compost_level`. To fix old bags, the world must be opened with an NBT
 editor and manually converted to use the new components. Unfortunately, there is no way to perform these conversions of 
@@ -22,3 +22,7 @@ In the world, the item can be used just like bonemeal to grow crops and saplings
 
 # TODO
 - Transfer api support for the bag? Not really sure of the details of that api, so might not be suitable.
+
+[Compost Bag]: https://raw.githubusercontent.com/dhyces/CompostBag/info/marketing/compost_bag_header.png "Compost Bag"
+[Requires Forge]: https://img.shields.io/badge/Loader-NeoForge%2C%20Fabric-a8320c?style=for-the-badge "Requires Forge"
+[Versions]: https://img.shields.io/badge/Versions-1.18.X%2C%201.19.X%2C%201.20.X%2C%201.21-a8320c?style=for-the-badge "1.18.X, 1.19.X, 1.20.X, 1.21"
