@@ -86,7 +86,7 @@ publishing {
 }
 
 modsDotGroovy {
-    platform = org.groovymc.modsdotgroovy.core.Platform.FABRIC
+    platform = org.groovymc.modsdotgroovy.types.core.Platform.FABRIC
     inferGather.set false
     gather {
         projectProperty("fabric_loader_version")

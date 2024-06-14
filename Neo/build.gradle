@@ -96,7 +96,7 @@ publishing {
 }
 
 modsDotGroovy {
-    platform = org.groovymc.modsdotgroovy.core.Platform.NEOFORGE
+    platform = org.groovymc.modsdotgroovy.types.core.Platform.NEOFORGE
     inferGather.set false
     gather {
         projectProperty("loader_version_range")
