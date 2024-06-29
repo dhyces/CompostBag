@@ -7,13 +7,13 @@
   ],
   "key": {
     "S": {
-        "tag": "forge:string"
+      "tag": "c:strings"
     },
     "L": {
-      "tag": "forge:leather"
+      "tag": "c:leathers"
     },
     "C": {
-      "item": "minecraft:composter"
+      "tag": "c:composters"
     }
   },
   "result": {
