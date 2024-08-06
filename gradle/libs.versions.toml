@@ -1,0 +1,41 @@
+[versions]
+minecraft_release = "1.21"
+minecraft_range = "[1.21,1.22)"
+publish_range = "1.21"
+
+parchment_release = "2024.07.28"
+parchment_minecraft = "1.21"
+
+javafml_range = "[3,)"
+neoforge_release = "21.0.161"
+neoforge_range = "[21.0.143,22.0)"
+
+fabric_loader = "0.15.11"
+fabric_api_release = "0.101.1+1.21"
+fabric_api_range = "[0.101.1,)"
+
+mixinextras = "0.3.6"
+
+jetbrains_annotations = "24.1.0"
+
+mdg_release = "2.0.0-beta.30"
+archloom = "1.7.410"
+
+curseforgegradle = "1.1.18"
+minotaur = "2.+"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft_release" }
+neoforge = { module = "net.neoforged:neoforge", version.ref = "neoforge_release" }
+fabric_api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric_api_release" }
+fabric_loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric_loader" }
+
+mixinextras_common = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixinextras" }
+
+jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
+
+[plugins]
+mdg = { id = "org.groovymc.modsdotgroovy", version.ref = "mdg_release" }
+archloom = { id = "dev.architectury.loom", version.ref = "archloom" }
+curseforgegradle = { id = "net.darkhax.curseforgegradle", version.ref = "curseforgegradle" }
+minotaur = { id = "com.modrinth.minotaur", version.ref = "minotaur" }

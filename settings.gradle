@@ -30,4 +30,4 @@ plugins {
 
 
 rootProject.name = 'CompostBag'
-include("Common", "Fabric", "Neo")
+include("common", "fabric", "neo")
